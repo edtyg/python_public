@@ -9,3 +9,5 @@
     - exchanges - Binance, Deribit etc...
 3) forex - connection to fx brokers
 4) libraries - examples for various libraries
+
+replace local_credentials and import own API Keys
