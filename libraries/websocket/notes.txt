@@ -1,0 +1,2 @@
+# websocket connections auto close when no message received in 60 seconds
+# rel to automatically reconnect

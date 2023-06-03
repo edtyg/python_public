@@ -1,0 +1,3 @@
+black pythonscript.py
+
+# does formatting of spaces and all

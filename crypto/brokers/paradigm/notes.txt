@@ -1,0 +1,49 @@
+# Overview
+Paradigm has three major products, Multi-Dealer RFQ (DRFQ), Global RFQ (GRFQ), and the Future Spread Dashboard (FSPD).
+These three products are separate and require separate authenticated interaction via their specific version & product connections URLs.
+Paradigm uses RESToverHTTP and JSON-RPCoverWebSockets as our API interfaces to be consistent with the broader crypto space.
+Feel free to reach out for any technical support as we would love to help!
+
+
+# Futures Spread - Our main focus now
+FSPD - Brief Overview
+The Future Spread Dashboard (FSPD) is to be used to trade Future Spreads using a central limit Order Book. 
+This product allows you to trade spreads as a single Strategy, priced at the Strategy level without any leg risk.
+Anyone is able to participate in the Order Book of a Strategy as either a Taker or a Maker. 
+All Orders, Trades and interactions are on an anonymous basis.
+FTX, Deribit, and Bybit are available as venues.
+
+# rate limits
+RESToverHTTP requests are rate limited per desk and by group. 
+By default, the read-only GET requests are rate limited to 100 requests per second 
+and all other requests, such as POST, PATCH, and DELETE are limited to 10 requests per second. 
+Paradigm can customize these limits by desk depending on the desk's volume of operations. 
+The desk administrator may request a limit increase by contacting support.
+You cannot horizontally scale your rate limit per desk by using multiple API Keys.
+
+
+# market maker protection
+Paradigm's Market Maker Protection (MMP) program is designed to protect Makers 
+and limits the number of executions possible across a desk across a period of time.
+
+All of a Maker's Desk's existing Quotes will be canceled and the 
+Maker's Desk will be prevented from creating additional Quotes if two executions occur within one second. 
+To remove this protection, the user can send a successful RESToverHTTP [PATCH] /v1/{product}/mmp/status/ request. 
+The MMP protection is automatically removed within 10 seconds of triggering by Paradigm without any interaction necessary by the user.
+
+Takers are only able to execute twice every five seconds.
+This feature is enabled for all Paradigm clients and cannot be disabled. 
+The conditions of MMP being triggered cannot be configured by the user.
+
+MMP is across all of your Desk's Paradigm API Keys. 
+MMP protections and workflows are shared across DRFQ+GRFQ products.
+
+This means, upon MMP being triggered by either DRFQ or GRFQ, 
+the Maker's Desk will be unable to create any additional quotes 
+and all existing quotes will be canceled irrespective of 
+whether you are using DRFQ or GRFQ until a 
+[PATCH] /v1/drfq/mmp/status/ or 
+[PATCH] /v1/grfq/mmp/status/ request is successful. 
+Desk interactions with FSPD will remain unaffected.
+
+MMP functionality is not applied for FSPD.

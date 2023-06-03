@@ -1,0 +1,5 @@
+name	height	weight	age	date_of_birth	is_married
+alice	180	72	22	1/1/2000	TRUE
+anna	162	54	21	1/1/2001	TRUE
+charlie	173	56	20	1/1/2002	FALSE
+diane	164	48	19	1/1/2003	FALSE

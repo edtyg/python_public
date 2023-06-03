@@ -1,0 +1,3 @@
+pylint pythonscript.py
+
+# does a check and rates your script

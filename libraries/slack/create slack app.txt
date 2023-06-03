@@ -1,0 +1,7 @@
+1) Create a slack workspace
+2) Create a slack app (go to slack webpage)
+	- go to OAuth and Permissions then add scopes ( chat:write ... etc) to allow app to do certain tasks
+	- install to workspace (everytime u add in a new permission, need to reinstall/refresh for it to work)
+3) Use Bot User OAuth Token
+4) Go to slack channel and add this app in
+5) You can now use the app to post messages
