@@ -1,63 +1,82 @@
+"""
+https://redis.io/docs/clients/python/
+pip install redis
+
+redis is a NoSQL database
+data is stored as key-value pairs
+
+uses RAM to store data
+"""
 import redis
 import pandas as pd
 import pickle
 import zlib
 
+from local_credentials.db_credentials import AFTERSHOCK_PC_MICRO_REDIS
+
 
 class RedisClient:
-    def __init__(
-        self,
-        redis_host="192.168.1.122",
-        redis_port=6379,
-        redis_password=None,
-        redis_db=0,
-    ):
-        pool = redis.ConnectionPool(
-            host=redis_host,
-            port=redis_port,
-            password=redis_password,
-            db=redis_db,
+    """
+    Connection client to redis database
+    """
+
+    def __init__(self, connection_credentials: dict):
+        self.redis_client = redis.Redis(
+            host=connection_credentials["HOST"],
+            port=connection_credentials["PORT"],
+            password=connection_credentials["PASSWORD"],
+            db=connection_credentials["DB"],
         )
 
-        self.redis_client = redis.Redis(connection_pool=pool)
-
-    def save_df(self, df, df_name):
-        self.redis_client.set(df_name, zlib.compress(pickle.dumps(df)))
-
-    def get_df(self, df_name):
-        try:
-            data = self.redis_get(df_name)
-            df = pickle.loads(zlib.decompress(data))
-
-        except TypeError as err:
-            print(
-                f"redis_client.py: Tried to get df with key: {df_name}, got error: {err}"
-            )
-            df = pd.DataFrame()
-
-        return df
-
-    def redis_set(self, key, value):
+    def redis_set(self, key: str, value: str):
+        """sets a key value pair"""
         self.redis_client.set(key, value)
 
-    def redis_get(self, key):
+    def redis_get(self, key: str):
+        """gets value by using key"""
         return self.redis_client.get(key)
 
+    def redis_drop(self, redis_key: str):
+        """deletes key:value pair by key"""
+        self.redis_client.delete(redis_key)
+
     def redis_get_keys(self):
-        self.redis_client.keys()
+        """gets all keys"""
+        return self.redis_client.keys()
 
-    def redis_hgetall(self, id):
-        return self.redis_client.hgetall(id)
+    def set_key_value_dataframe(self, redis_key: str, redis_value: pd.DataFrame):
+        """sets a new key-value pair where value is a pandas dataframe
+        compresses data
 
-    def redis_bgsave(self):
-        self.redis_client.bgsave()
+        Args:
+            redis_key (str): key i.e BINANCE_BTC_USDT_ORDERBOOK
+            redis_value (_type_): value = pandas dataframe
+        """
+        value = zlib.compress(pickle.dumps(redis_value))
+        self.redis_client.set(name=redis_key, value=value)
+
+    def get_key_dataframe(self, redis_key: str):
+        """gets value of specified redis_key whose
+        value = pandas dataframe in this case
+
+        Args:
+            redis_key (str): key i.e BINANCE_BTC_USDT_ORDERBOOK
+            redis_value (_type_): value = pandas dataframe
+        """
+        try:
+            data = self.redis_get(redis_key)
+            df_data = pickle.loads(zlib.decompress(data))
+        except TypeError:
+            print("value does not exist")
+            df_data = pd.DataFrame()
+        return df_data
 
 
 if __name__ == "__main__":
-    redis_instance = RedisClient()
+    client = RedisClient(AFTERSHOCK_PC_MICRO_REDIS)
 
-    keys = redis_instance.redis_client.keys()
+    keys = client.redis_client.keys()
     print(keys)
 
-    # df1 = redis_instance.get_df('age')
-    # print(df1)
+    df1 = client.get_key_dataframe('DERIBIT_BTC_USD_INDEX')
+    print(df1)
