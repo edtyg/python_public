@@ -1,3 +1,7 @@
+"""
+some basic stuff here
+"""
+
 print("hi")
 print("hi" + "lol")
 

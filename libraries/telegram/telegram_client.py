@@ -1,26 +1,39 @@
+"""
+https://core.telegram.org/bots/api
+Telegran API Docs here
+"""
 import requests
 
-from local_credentials.api_key_others import TELEGRAM_BOT_NAME, TELEGRAM_TOKEN
 
+class Telegram:
+    """Class to interact with telegram
+    need to set up a telegram bot and add bot into chat groups
+    """
 
-class telegram:
     def __init__(self):
-        self.bot_name = TELEGRAM_BOT_NAME
-        self.token = TELEGRAM_TOKEN
+        self.bot_name = "@edtan_bot"
+        self.token = "5949931630:AAH89e-ahxBbzmIG8GnkjuCYqM6CWYqH9jo"
+
         self.base_url = f"https://api.telegram.org/bot{self.token}/"
 
-        self.chat_id = "-435703625"  # crypto millionaire chat
-        self.chat_id = "-829556349"  # 400m work chat
+        self.chatgroup_400m = "-829556349"  # 400m work chat
+        self.chatgroup_self = "-907566618"  # ed chat for testing
+        self.chatgroup_hts_chatbot = "-987081068"  # hts chatbot with gongye
 
-    def send_message(self, chat_id: str, text: str):
+        self.timeout = 5
+
+    def send_message(self, text: str):
+        """sends a message in group chat"""
         end_point = "sendMessage"
-        params = {"chat_id": chat_id, "text": text}
+        params = {"chat_id": self.chatgroup_hts_chatbot, "text": text}
 
-        r = requests.get(self.base_url + end_point, params=params)
-        return r
+        response = requests.get(
+            self.base_url + end_point, params=params, timeout=self.timeout
+        )
+        print(response)
+        return response
 
 
 if __name__ == "__main__":
-    client = telegram()
-
-    msg = client.send_message("-829556349", "hi testing")
+    client = Telegram()
+    msg = client.send_message("hi testing")

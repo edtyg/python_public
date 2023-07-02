@@ -1,5 +1,7 @@
-# lists are mutable
-# mutable version of tuples
+"""
+lists are mutable, elements can be modified after creation
+mutable version of tuples
+"""
 
 l = []
 type(l)

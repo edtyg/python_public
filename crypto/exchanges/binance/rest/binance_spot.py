@@ -5,8 +5,7 @@ https://binance-docs.github.io/apidocs/spot/en/#change-log
 from typing import Dict, Optional
 
 import requests
-
-from binance_client import Binance
+from python.crypto.exchanges.binance.rest.binance_client import Binance
 from local_credentials.api_key_exchanges import BINANCE_KEY, BINANCE_SECRET
 
 

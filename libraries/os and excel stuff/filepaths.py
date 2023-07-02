@@ -1,4 +1,4 @@
-import os 
+import os
 
 # current file name
 filename = os.path.basename(__file__)
@@ -9,6 +9,7 @@ full_path = os.path.realpath(__file__)
 # folder of current file - does not include file name
 full_path = os.path.realpath(__file__)
 save_path = os.path.dirname(full_path) + "/"
+print(save_path)
 
 # list all the files that are in the current directory
 print(os.listdir())

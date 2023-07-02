@@ -1,5 +1,6 @@
 """
 examples for writing loops
+for loops, while loops
 """
 
 # this prints 1 to 9, step 2

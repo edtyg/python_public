@@ -7,10 +7,11 @@ data is stored as key-value pairs
 
 uses RAM to store data
 """
-import redis
-import pandas as pd
 import pickle
 import zlib
+
+import pandas as pd
+import redis
 
 from local_credentials.db_credentials import AFTERSHOCK_PC_MICRO_REDIS
 
@@ -78,5 +79,5 @@ if __name__ == "__main__":
     keys = client.redis_client.keys()
     print(keys)
 
-    df1 = client.get_key_dataframe('DERIBIT_BTC_USD_INDEX')
+    df1 = client.get_key_dataframe("DERIBIT_BTC_USD_INDEX")
     print(df1)
