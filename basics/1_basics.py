@@ -20,7 +20,8 @@ x.upper()
 x.swapcase()
 x.capitalize()  # first letter caps - the rest small
 x.title()  # first letter of each word in CAPS - the rest small
-x.strip()
+x.strip()  # removes whitespaces
+x.split()  # splits string into a list -> ["SUP", "son"]
 x.replace("son", "daughter")
 
 # type conversion
