@@ -1,0 +1,32 @@
+### saving data into redis ###
+/etc/systemd/system/deribit_btc_index.service
+/etc/systemd/system/deribit_btc_perp_orderbook.service
+/etc/systemd/system/deribit_btc_positions.service
+
+/etc/systemd/system/deribit_eth_index.service
+/etc/systemd/system/deribit_eth_perp_orderbook.service
+/etc/systemd/system/deribit_eth_positions.service
+
+
+### execution ###
+/etc/systemd/system/deribit_btc_trading_maker_algo.service
+/etc/systemd/system/deribit_btc_trading_taker_algo.service
+
+/etc/systemd/system/deribit_eth_trading_maker_algo.service
+/etc/systemd/system/deribit_eth_trading_taker_algo.service
+
+
+### slack messages ###
+/etc/systemd/system/deribit_btc_positions_slack.service
+
+/etc/systemd/system/deribit_eth_positions_slack.service
+
+
+### venv ###
+source /home/edgar/venv/deribit_trading/bin/activate
+pip install -r /home/edgar/venv/requirements.txt
+
+
+### systemd permissions ###
+
+sudo chmod -R ugo+rwx /etc/systemd/system 

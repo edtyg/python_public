@@ -1,0 +1,64 @@
+"""
+SPOT execution program
+"""
+
+import datetime as dt
+from typing import Optional
+
+import pandas as pd
+
+from src.crypto.exchanges.binance.rest_apis.spot.spot_account import spot_client_read
+
+
+def get_spot_order_history(client, spot_symbol: str, start_time: Optional[int] = None):
+    """Gets spot order history with time specified
+    max of 1000 rows per api call
+    easier to use start time
+
+    Args:
+        client (_type_): BinanceSpot client
+        spot_symbol (str): "BTCUSDT
+    """
+    df_orders_final = pd.DataFrame()
+    order_status = False
+
+    while order_status is False:
+        params = {
+            "symbol": spot_symbol,
+            "startTime": start_time,
+            "limit": 1000,
+        }
+        orders = client.get_all_orders(params)
+        df_orders = pd.DataFrame(orders)
+
+        # gets df_orders_final latest time
+        try:
+            current_latest_time = df_orders_final.tail(1)["time"].values[0]
+        except Exception as e:
+            current_latest_time = 0
+            print(e)
+
+        # filters orders greater than latest time
+        df_orders = df_orders.loc[df_orders["time"] > current_latest_time]
+        if df_orders.empty is True:
+            order_status = True
+        else:
+            df_orders_final = pd.concat([df_orders_final, df_orders])
+            latest_time = df_orders_final.tail(1)["time"].values[0]
+            start_time = latest_time
+
+    df_orders_final["datetime"] = pd.to_datetime(df_orders_final["time"], unit="ms")
+    return df_orders_final
+
+
+if __name__ == "__main__":
+
+    spot_symbol = "ETHUSDT"
+    start_time = int(dt.datetime(2023, 1, 1, 12, 0, 0).timestamp() * 1000)
+
+    orders = get_spot_order_history(
+        spot_client_read,
+        spot_symbol,
+        start_time,
+    )
+    print(orders)

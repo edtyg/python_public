@@ -1,6 +1,0 @@
-not the same as multithreading or multiprocessing
-
-it is concurrent programming
-
-run 1 task at a time
-but can start on running on other things if current process is waiting or loading

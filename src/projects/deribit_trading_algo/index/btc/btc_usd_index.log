@@ -1,0 +1,3 @@
+2023-05-19 20:49:37.612 INFO: {'jsonrpc': '2.0', 'id': 42, 'result': {'index_price': 26910.99, 'estimated_delivery_price': 26910.99}, 'usIn': 1684500579629457, 'usOut': 1684500579629608, 'usDiff': 151, 'testnet': False}
+2023-05-19 20:49:37.869 INFO: {'jsonrpc': '2.0', 'id': 42, 'result': {'index_price': 26910.99, 'estimated_delivery_price': 26910.99}, 'usIn': 1684500579885162, 'usOut': 1684500579885272, 'usDiff': 110, 'testnet': False}
+2023-05-19 20:49:38.121 INFO: {'jsonrpc': '2.0', 'id': 42, 'result': {'index_price': 26910.99, 'estimated_delivery_price': 26910.99}, 'usIn': 1684500580135898, 'usOut': 1684500580136030, 'usDiff': 132, 'testnet': False}
