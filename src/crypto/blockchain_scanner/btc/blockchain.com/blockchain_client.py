@@ -1,12 +1,11 @@
 """
-https://www.blockchain.com/explorer/api
-API docs here - no apikey needed
-
-docs for blockchain explorer
+blockchain.com APIs
 https://www.blockchain.com/explorer/api/blockchain_api
 """
 
 import requests
+
+from src.utils.utils import Utils
 
 
 class BlockChain:
@@ -18,29 +17,6 @@ class BlockChain:
 
     def __init__(self):
         self.blockchain_base_url = "https://blockchain.info/"
-        self.timeout = self.DEFAULT_TIMEOUT
-
-    ########################
-    ### Standard Request ###
-    ########################
-
-    def _get(self, endpoint: str):
-        """
-        Standard Get Request
-        """
-
-        try:
-            response = requests.get(
-                self.blockchain_base_url + endpoint, timeout=self.timeout
-            )
-            response.raise_for_status()  # Raise HTTPError for bad responses
-            return response.json()
-
-        except requests.exceptions.Timeout:
-            print("Request timed out. Please try again later.")
-
-        except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
 
     ###############
     ### Methods ###
@@ -53,14 +29,12 @@ class BlockChain:
             txid (str): transaction id
         """
         endpoint = f"rawtx/{txid}"
-        resp = self._get(endpoint)  # Use _get method to avoid duplicate code
-        return resp
+        return Utils.get_request(self.blockchain_base_url, endpoint)
 
     def get_block_count(self):
         """Gets current BTC block height"""
         endpoint = "q/getblockcount"
-        resp = self._get(endpoint)
-        return resp
+        return Utils.get_request(self.blockchain_base_url, endpoint)
 
     def get_num_confirmations(self, txid: str):
         """Gets number of confirmations for a txid

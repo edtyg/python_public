@@ -7,13 +7,14 @@ data is stored as key-value pairs
 
 uses RAM to store data
 """
+
 import pickle
 import zlib
 
 import pandas as pd
 import redis
 
-from local_credentials.api_personal.databases.redis import REDIS_UBUNTU_ADMIN
+# from keys.api_work.databases.redis import SG_EXECUTION_SERVER_REDIS_CONN
 
 
 class RedisClient:
@@ -74,10 +75,20 @@ class RedisClient:
 
 
 if __name__ == "__main__":
-    client = RedisClient(REDIS_UBUNTU_ADMIN)
+    SGTRDG3_REDIS_CONN = {
+        "HOST": "172.26.70.42",
+        "PORT": "6379",
+        "PASSWORD": "redis",
+        "DB": 0,
+    }
+    client = RedisClient(SGTRDG3_REDIS_CONN)
 
     keys = client.redis_client.keys()
     print(keys)
 
-    df1 = client.get_key_dataframe("DERIBIT_BTC_USD_INDEX")
-    print(df1)
+    # val = client.redis_get("OTC_Main_ftx_spot_margin_lend_amt")
+    # print(val)
+    # value = pickle.loads(zlib.decompress(val))
+    # print(value)
+    # df1 = client.get_key_dataframe("DERIBIT_BTC_USD_INDEX")
+    # print(df1)

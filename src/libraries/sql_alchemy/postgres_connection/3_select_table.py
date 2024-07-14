@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     # Select data from the table
     query = """
-    Select * from binance_spot_ethusdt_1m
+    Select * from binance_spot_btcusdt_1m
     limit 100
     """
     data = select_table(client, query)

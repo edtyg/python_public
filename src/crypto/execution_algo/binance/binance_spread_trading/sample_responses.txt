@@ -1,0 +1,87 @@
+Sample response for coinm market order
+{
+    "orderId": 1716432265,
+    "symbol": "BTCUSD_240628",
+    "pair": "BTCUSD",
+    "status": "NEW",
+    "clientOrderId": "QKREhMlNJe5oLFgstPKtTM",
+    "price": "0",
+    "avgPrice": "0.0",
+    "origQty": "1",
+    "executedQty": "0",
+    "cumQty": "0",
+    "cumBase": "0",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "reduceOnly": False,
+    "closePosition": False,
+    "side": "BUY",
+    "positionSide": "BOTH",
+    "stopPrice": "0",
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": False,
+    "origType": "MARKET",
+    "updateTime": 1717057351722,
+}
+
+response for coinm order details
+{
+    "orderId": 1716432265,
+    "symbol": "BTCUSD_240628",
+    "pair": "BTCUSD",
+    "status": "FILLED",
+    "clientOrderId": "QKREhMlNJe5oLFgstPKtTM",
+    "price": "0",
+    "avgPrice": "67716.3",
+    "origQty": "1",
+    "executedQty": "1",
+    "cumBase": "0.00147675",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "reduceOnly": False,
+    "closePosition": False,
+    "side": "BUY",
+    "positionSide": "BOTH",
+    "stopPrice": "0",
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": False,
+    "origType": "MARKET",
+    "time": 1717057351722,
+    "updateTime": 1717057351722,
+}
+
+
+response for spot market order 
+{
+    "symbol": "ETHUSDT",
+    "orderId": 17962348366,
+    "orderListId": -1,
+    "clientOrderId": "M2gjBs70h0qzEpvJpEiSuW",
+    "transactTime": 1717122633297,
+    "price": "0.00000000",
+    "origQty": "0.01000000",
+    "executedQty": "0.01000000",
+    "cummulativeQuoteQty": "37.57420000",
+    "status": "FILLED",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "side": "BUY",
+    "workingTime": 1717122633297,
+    "fills": [
+        {
+            "price": "3757.42000000",
+            "qty": "0.01000000",
+            "commission": "0.00004743",
+            "commissionAsset": "BNB",
+            "tradeId": 1438890571,
+        },
+        {
+            "price": "3757.42000000",
+            "qty": "0.01000000",
+            "commission": "0.00004743",
+            "commissionAsset": "BNB",
+            "tradeId": 1438890571,
+        }
+    ],
+    "selfTradePreventionMode": "EXPIRE_MAKER",
+}

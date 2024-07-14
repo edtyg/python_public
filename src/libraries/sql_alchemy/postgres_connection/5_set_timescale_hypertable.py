@@ -15,13 +15,18 @@ def set_hypertable(client, query: str):
     """Selects table using SQL Query"""
 
     engine = client.engine
-    connection = engine.connect()
-    sql_query = text(query)
-    result_proxy = connection.execute(sql_query)
-    results = result_proxy.fetchall()
+    with engine.connect() as connection:
+        trans = connection.begin()
+        try:
+            sql_query = text(query)
+            result_proxy = connection.execute(sql_query)
+            trans.commit()  # need to commit here
+            results = result_proxy.fetchall()
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
-    df_results = pd.DataFrame(results)
-    return df_results
+        df_results = pd.DataFrame(results)
+        return df_results
 
 
 if __name__ == "__main__":
@@ -30,8 +35,8 @@ if __name__ == "__main__":
 
     # Select data from the table
     query = """
-    SELECT create_hypertable('binance_spot_ethusdt_1m', 'utc_datetime')
+    SELECT create_hypertable('cme', 'column5', migrate_data => true)
     """
-    print(query)
+
     data = set_hypertable(client, query)
     print(data)

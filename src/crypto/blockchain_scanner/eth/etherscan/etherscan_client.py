@@ -7,7 +7,7 @@ certain endpoints require a PRO subscription - paid API key
 
 import requests
 
-from local_credentials.api_key_data import ETHERSCAN_KEY
+from keys.api_personal.crypto_blockchain.etherscan import ETHERSCAN_KEY
 
 
 class EtherScan:

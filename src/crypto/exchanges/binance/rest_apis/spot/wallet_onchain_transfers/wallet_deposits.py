@@ -4,7 +4,10 @@ Get wallet transfer records
 
 import pandas as pd
 
-from src.crypto.exchanges.binance.rest_apis.spot.spot_account import spot_client_read
+from src.crypto.exchanges.binance.rest_apis.spot.spot_account import (
+    mca_ltp_client_read,
+    spot_client_read,
+)
 
 
 def get_deposits(client):
@@ -21,5 +24,5 @@ def get_deposits(client):
 
 if __name__ == "__main__":
 
-    dep = get_deposits(spot_client_read)
+    dep = get_deposits(mca_ltp_client_read)
     print(dep.columns)

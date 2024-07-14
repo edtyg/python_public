@@ -1,12 +1,13 @@
 """
 SPOT execution program
 """
+
 import datetime as dt
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_exchanges.okx import OKX_MCA_MAIN_READ
-from python.crypto.exchanges.okx.rest.okx_client import Okx
+from keys.api_work.crypto_exchanges.okx import OKX_MCA_LTP1_READ
+from src.crypto.exchanges.okx.rest.okx_client import Okx
 
 
 def get_funding_account_balances(client):
@@ -25,10 +26,11 @@ def get_funding_account_balances(client):
 
 
 if __name__ == "__main__":
+    account = OKX_MCA_LTP1_READ
     okx_client = Okx(
-        apikey=OKX_MCA_MAIN_READ["api_key"],
-        apisecret=OKX_MCA_MAIN_READ["api_secret"],
-        passphrase=OKX_MCA_MAIN_READ["passphrase"],
+        apikey=account["api_key"],
+        apisecret=account["api_secret"],
+        passphrase=account["passphrase"],
     )
 
     funding_balance = get_funding_account_balances(okx_client)

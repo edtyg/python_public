@@ -5,7 +5,6 @@ Coinbase Brokerage OHLCV
 import datetime as dt
 
 import pandas as pd
-
 from local_credentials.api_personal.crypto_exchanges.coinbase import (
     COINBASE_BROKERAGE_READ,
 )

@@ -4,8 +4,7 @@ Spot APis here
 
 from typing import Dict, Optional
 
-from local_credentials.api_personal.crypto_exchanges.hashkey import HASHKEY_TRADE
-from python.crypto.exchanges.hashkey.rest.hashkey_hk.hashkey_client_hk import (
+from src.crypto.exchanges.hashkey.rest.hashkey_hk.hashkey_client_hk import (
     HashkeyExchange,
 )
 
@@ -198,25 +197,3 @@ class HashkeySpot(HashkeyExchange):
         endpoint = "/api/v1/account/deposit/address"
         response = self._get_private(endpoint, params)
         return response
-
-
-if __name__ == "__main__":
-    account = HASHKEY_TRADE
-    client = HashkeySpot(account["api_key"], account["api_secret"])
-
-    # custody account id: 1468013748774110721
-    # fiat account id: 1468013748774110722
-    # main trading account id: 1468013748774110720
-    # OPT account id: 1468177790721468160
-
-    # fee_tier = client.get_vip_info()
-    # print(fee_tier)
-
-    acc_info = client.get_account_info()
-    print(acc_info)
-
-    # custody_account = client.get_account_info({"accountId": "1468013748774110721"})
-    # print(custody_account)
-
-    # fiat_account = client.get_account_info({"accountId": "1468013748774110722"})
-    # print(fiat_account)

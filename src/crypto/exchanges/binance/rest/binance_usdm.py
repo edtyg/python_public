@@ -5,9 +5,7 @@ https://binance-docs.github.io/apidocs/spot/en/#change-log
 
 from typing import Dict, Optional
 
-import requests
-
-from python.crypto.exchanges.binance.rest.binance_client import Binance
+from crypto.exchanges.binance.rest.binance_client import Binance
 
 
 class BinanceUsdm(Binance):
@@ -18,50 +16,14 @@ class BinanceUsdm(Binance):
     def __init__(self, apikey: str, apisecret: str):
         super().__init__(apikey, apisecret)
         self.binance_usdm_base_url = "https://fapi.binance.com"
-        self.timeout = 5
-
-    #########################
-    ### Standard Requests ###
-    #########################
-
-    def _get(self, url: str):
-        """
-        GET Requests
-        """
-        try:
-            response = requests.get(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as e:
-            print(e)
-
-    def _post(self, url: str):
-        """
-        POST Requests
-        """
-        try:
-            response = requests.post(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as e:
-            print(e)
-
-    def _delete(self, url: str):
-        """
-        DELETE Request
-        """
-        try:
-            response = requests.delete(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as e:
-            print(e)
 
     #############################
     ### market data endpoints ###
     #############################
 
-    def get_orderbook(self, params: dict) -> dict:
+    def get_usdm_orderbook(self, params: dict) -> dict:
         """
-        Public
-        GET method
+        PUBLIC GET method
         https://binance-docs.github.io/apidocs/futures/en/#order-book
 
         orderbook data
@@ -73,15 +35,13 @@ class BinanceUsdm(Binance):
             limit   int     no          default=500 valid=[5,10,20,50,100,500,1000]
         """
         endpoint = "/fapi/v1/depth"
-        response = requests.get(
-            self.binance_usdm_base_url + endpoint, params, timeout=self.timeout
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_usdm_base_url, endpoint, params
         )
-        return response.json()
 
-    def get_kline(self, params: dict) -> dict:
+    def get_usdm_kline(self, params: dict) -> dict:
         """
-        PUBLIC
-        GET request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/futures/en/#kline-candlestick-data
 
         Args:
@@ -94,16 +54,14 @@ class BinanceUsdm(Binance):
             limit 	    INT 	NO 	        Default 500; max 1000.
         """
         endpoint = "/fapi/v1/klines"
-        response = requests.get(
-            self.binance_usdm_base_url + endpoint, params, timeout=self.timeout
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_usdm_base_url, endpoint, params
         )
-        return response.json()
 
-    def get_symbol_price_ticker_v2(self, params: Optional[Dict] = None) -> dict:
+    def get_usdm_price_ticker_v2(self, params: Optional[Dict] = None) -> dict:
         """
-        PUBLIC
-        GET request
-        https://binance-docs.github.io/apidocs/futures/en/#symbol-price-ticker
+        PUBLIC GET request
+        https://binance-docs.github.io/apidocs/futures/en/#symbol-price-ticker-v2
 
         Latest price for a symbol or symbols.
 
@@ -113,19 +71,17 @@ class BinanceUsdm(Binance):
             symbol  str     no
         """
         endpoint = "/fapi/v2/ticker/price"
-        response = requests.get(
-            self.binance_usdm_base_url + endpoint, params, timeout=self.timeout
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_usdm_base_url, endpoint, params
         )
-        return response.json()
 
     ###############################
     ### Account/Trades Endpoint ###
     ###############################
 
-    def post_new_order(self, params: dict) -> dict:
+    def post_usdm_order(self, params: dict) -> dict:
         """
-        PRIVATE
-        POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
 
         Send in a new order.
@@ -143,13 +99,13 @@ class BinanceUsdm(Binance):
             newClientOrderId    str         no          unique id among open orders
         """
         endpoint = "/fapi/v1/order"
-        url = self.signed_request_url(self.binance_usdm_base_url, endpoint, params)
-        return self._post(url)
+        return self.rest_requests(
+            "PRIVATE", "POST", self.binance_usdm_base_url, endpoint, params
+        )
 
-    def get_query_order(self, params: dict) -> dict:
+    def get_usdm_order(self, params: dict) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/futures/en/#query-order-user_data
 
         Check an order's status.
@@ -162,13 +118,13 @@ class BinanceUsdm(Binance):
             origClientOrderId	STRING	    NO
         """
         endpoint = "/fapi/v1/order"
-        url = self.signed_request_url(self.binance_usdm_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_usdm_base_url, endpoint, params
+        )
 
-    def delte_order(self, params: dict) -> dict:
+    def delete_usdm_order(self, params: dict) -> dict:
         """
-        PRIVATE
-        DELETE request
+        PRIVATE DELETE request
         https://binance-docs.github.io/apidocs/futures/en/#cancel-order-trade
 
         Cancel an active order.
@@ -181,13 +137,13 @@ class BinanceUsdm(Binance):
             origClientOrderId	STRING	    NO
         """
         endpoint = "/fapi/v1/order"
-        url = self.signed_request_url(self.binance_usdm_base_url, endpoint, params)
-        return self._delete(url)
+        return self.rest_requests(
+            "PRIVATE", "DELETE", self.binance_usdm_base_url, endpoint, params
+        )
 
-    def get_all_orders(self, params: dict) -> dict:
+    def get_usdm_orders(self, params: dict) -> dict:
         """
-        Private
-        GET request
+        Private GET request
         https://binance-docs.github.io/apidocs/futures/en/#all-orders-user_data
 
         Gets all account orders; active, canceled, or filled.
@@ -202,25 +158,25 @@ class BinanceUsdm(Binance):
             limit               INT         No          Default 500, Max 1000
         """
         endpoint = "/fapi/v1/allOrders"
-        url = self.signed_request_url(self.binance_usdm_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_usdm_base_url, endpoint, params
+        )
 
-    def get_account_balance(self) -> dict:
+    def get_usdm_account_balance(self) -> dict:
         """
-        Private
-        GET request
+        Private GET request
         https://binance-docs.github.io/apidocs/futures/en/#futures-account-balance-v2-user_data
 
         Gets USDM account balances
         """
         endpoint = "/fapi/v2/balance"
-        url = self.signed_request_url(self.binance_usdm_base_url, endpoint)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_usdm_base_url, endpoint
+        )
 
-    def get_account_trade_list(self, params: dict) -> dict:
+    def get_usdm_trade_list(self, params: dict) -> dict:
         """
-        Private
-        GET request
+        Private GET request
         https://binance-docs.github.io/apidocs/futures/en/#account-trade-list-user_data
 
         Get trades for a specific account and symbol.
@@ -235,5 +191,6 @@ class BinanceUsdm(Binance):
             limit               INT         No          Default 500, Max 1000
         """
         endpoint = "/fapi/v1/userTrades"
-        url = self.signed_request_url(self.binance_usdm_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_usdm_base_url, endpoint, params
+        )

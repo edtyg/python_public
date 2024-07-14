@@ -96,9 +96,9 @@ def pull_spot_klines(ticker: str, start_time: int, end_time: int):
 
 
 if __name__ == "__main__":
-    symbol = "BTCUSD_210625"
-    start_time = int(dt.datetime(2021, 1, 1, 0, 0, 0).timestamp() * 1000)  # start time
-    end_time = int(dt.datetime(2021, 6, 1, 12, 0, 0).timestamp() * 1000)  # end time
+    symbol = "BTCUSD_240927"
+    start_time = int(dt.datetime(2024, 1, 1, 0, 0, 0).timestamp() * 1000)  # start time
+    end_time = int(dt.datetime(2024, 7, 28, 12, 0, 0).timestamp() * 1000)  # end time
 
     data = pull_spot_klines(symbol, start_time, end_time)
     print(data)

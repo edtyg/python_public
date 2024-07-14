@@ -8,9 +8,6 @@ class ParentClass:
     """parent class example"""
 
     def __init__(self, age):
-        # initialize with one attribute
-
-        # attribute
         self.age = age
 
     # methods

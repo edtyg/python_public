@@ -212,6 +212,80 @@ class Okx:
         data = self._get(api_type, endpoint, params)
         return data
 
+    def get_max_loan_by_instrument(self, params: dict):
+        """
+        private method - GET
+
+        https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-the-maximum-loan-of-instrument
+
+        Args:
+            params (dict)
+
+            Parameters 	Types 	Required 	Description
+            instId      String  Yes         BTC-USDT,ETH-USDT
+            mgnMode     String  Yes         isolated or cross
+            mgnCcy      String  No
+        """
+        api_type = "private"
+        endpoint = "/api/v5/account/max-loan"
+        data = self._get(api_type, endpoint, params)
+        return data
+
+    def get_fees(self, params: dict):
+        """
+        private method - GET
+
+        https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-fee-rates
+
+        Args:
+            params (dict)
+
+            Parameters 	Types 	Required 	Description
+            instType    String  Yes         SPOT, MARGIN ...
+            instId      String  no          BTC-USDT,ETH-USDT
+            uly         String  no          BTC-USD Applicable to FUTURES/SWAP/OPTION
+            instFamily  String  Yes         BTC-USD Applicable to FUTURES/SWAP/OPTION
+        """
+        api_type = "private"
+        endpoint = "/api/v5/account/trade-fee"
+        data = self._get(api_type, endpoint, params)
+        return data
+
+    def get_interest_rate(self, params: dict):
+        """
+        private method - GET
+
+        https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-interest-rate
+
+        Args:
+            params (dict)
+
+            Parameters 	Types 	Required 	Description
+            ccy         String  No          BTC
+        """
+        api_type = "private"
+        endpoint = "/api/v5/account/interest-rate"
+        data = self._get(api_type, endpoint, params)
+        return data
+
+    def get_borrow_interest_limit(self, params: Optional[Dict] = None):
+        """
+        private method - GET
+
+        https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-borrow-interest-and-limit
+
+        Args:
+            params (dict)
+
+            Parameters 	Types 	Required 	Description
+            type        String  No          1 or 2. 1=VIP Loans, 2=Market Loans
+            ccy         String  No          BTC
+        """
+        api_type = "private"
+        endpoint = "/api/v5/account/interest-limits"
+        data = self._get(api_type, endpoint, params)
+        return data
+
     ##########################
     ### order book trading ###
     ##########################

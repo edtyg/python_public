@@ -5,7 +5,7 @@ SPOT execution program
 from src.crypto.exchanges.binance.rest_apis.spot.spot_account import spot_client_trade
 
 
-def cancel_spot_rder(client):
+def cancel_spot_order(client):
     """
     Cancels spot order
 
@@ -14,7 +14,7 @@ def cancel_spot_rder(client):
     """
     order_params = {
         "symbol": "NEARUSDT",
-        "orderId": "2631762199",
+        "orderId": "2719647297",
     }
 
     order = client.delete_order(order_params)
@@ -23,5 +23,5 @@ def cancel_spot_rder(client):
 
 if __name__ == "__main__":
 
-    order1 = cancel_spot_rder(spot_client_trade)
+    order1 = cancel_spot_order(spot_client_trade)
     print(order1)

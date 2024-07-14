@@ -4,9 +4,9 @@ Gets wallet balances using ethplorer api
 
 import pandas as pd
 
-from local_credentials.api_personal.crypto_blockchain.ethplorer import ETHPLORER_KEY
-from python.crypto.blockchain_scanner.eth.ethplorer.ethplorer_client import ETHPlorer
-from python.crypto.blockchain_scanner.eth.ethplorer.ethplorer_contract_credentials import (
+from keys.api_personal.crypto_blockchain.ethplorer import ETHPLORER_KEY
+from src.crypto.blockchain_scanner.eth.ethplorer.ethplorer_client import ETHPlorer
+from src.crypto.blockchain_scanner.eth.ethplorer.ethplorer_contract_credentials import (
     erc_tokens_addresses,
     erc_wallet_addresses,
 )

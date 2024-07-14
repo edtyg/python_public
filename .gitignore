@@ -1,6 +1,7 @@
 __pycache__/
 
-config/
 keys/
 logs/
 venv
+*.log
+.vscode/

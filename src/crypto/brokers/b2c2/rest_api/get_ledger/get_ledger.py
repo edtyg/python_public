@@ -4,8 +4,8 @@ B2C2 Ledger
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_brokers.b2c2 import B2C2_HTS_READ
-from python.crypto.brokers.b2c2.rest.b2c2_client import B2C2Rest
+from keys.api_work.crypto_brokers.b2c2 import B2C2_HTS_READ
+from src.crypto.brokers.b2c2.rest.b2c2_client import B2C2Rest
 
 
 def get_ledger_df(client):

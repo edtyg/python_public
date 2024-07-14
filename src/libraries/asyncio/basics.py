@@ -11,10 +11,6 @@ api calls, database queries, reading files
 import asyncio
 import time
 
-# while using spyder
-# import nest_asyncio
-# nest_asyncio.apply()
-
 
 async def testing():
     """

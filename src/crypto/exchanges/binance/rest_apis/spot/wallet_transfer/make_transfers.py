@@ -13,9 +13,10 @@ def make_transfer(client):
     """
     transfer = client.post_user_universal_transfer(
         {
-            "type": "MAIN_UMFUTURE",
-            "asset": "BTC",
+            "type": "ISOLATED_MARGIN_MAIN",
+            "asset": "USDT",
             "amount": 0.01,
+            "fromSymbol": "BTCUSDT",
         }
     )
     return transfer

@@ -3,13 +3,13 @@ class to interact with config files .ini (Initialization) format
 
 
 [staff-otc]  # sections
-id = -911624131 # option(key) and values - both must be string
+id = -911624131 # option(key) and values - default string format
 """
 
 from configparser import ConfigParser
 
 
-class configSetter:
+class ConfigSetter:
     """
     Class to work with config files
     """
@@ -20,7 +20,6 @@ class configSetter:
         .../config.ini
         """
         self.filepath = filepath
-
         self.config = ConfigParser()
         self.config.read(filepath)
 
@@ -96,17 +95,27 @@ class configSetter:
 
 
 if __name__ == "__main__":
-    filepath = "C:/Users/Administrator/OneDrive/Github/python/src/libraries/configparser/config.ini"
-    cfg = configSetter(filepath)
+    filepath = "C:/Users/EdgarTan/Documents/Github/python/config/trade_execution_algos/binance/binance_spot_twap_limit.ini"
+    cfg = ConfigSetter(filepath)
 
     sections = cfg.get_sections()
+    print("sections here")
     print(sections)
 
-    section_data = cfg.get_section_data("trading_params")
-    print(section_data)
+    # section_data = cfg.get_section_data("btc-params")
+    # print("section data here")
+    # print(section_data)
 
-    # cfg.add_section("trading_params")
-    # cfg.add_data("trading_params", "quote_ticker", "USDT")
+    # cfg.add_section("bnb-params")
+    # cfg.add_data("bnb-params", "price", "400")
+
+    # sections = cfg.get_sections()
+    # print("sections here")
+    # print(sections)
+
+    # section_data = cfg.get_section_data("bnb-params")
+    # print("section data here")
+    # print(section_data)
 
     # cfg.delete_data("trading_params", "quote_ticker")
 

@@ -29,7 +29,7 @@ class Mathv2:
 
 
 if __name__ == "__main__":
-
+    pass
     # z = Math()
     # print(z)
     # y = z.add(1, 2)

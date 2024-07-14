@@ -1,6 +1,5 @@
 """
 pip install aiohttp
-aiohttp.__version__
 """
 
 import asyncio

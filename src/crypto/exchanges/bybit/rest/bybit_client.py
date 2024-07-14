@@ -12,11 +12,6 @@ from urllib.parse import urlencode
 
 import requests
 
-from local_credentials.api_work.crypto_exchanges.bybit import (
-    BYBIT_MCA_MAIN_READ,
-    BYBIT_MCA_MAIN_TRADE,
-)
-
 
 class Bybit:
     """Rest API for bybit"""
@@ -344,6 +339,49 @@ class Bybit:
         endpoint = "/v5/account/wallet-balance"
         return self._get(endpoint, params)
 
+    def post_repay_liability(self, params: dict):
+        """
+        You can manually repay the liabilities of Unified account
+        https://bybit-exchange.github.io/docs/v5/account/repay-liability
+
+        Args:
+            params (dict):
+            Parameter   Required    Type        Comments
+            coin        false       string      UNIFIED, CONTRACT, SPOT
+        """
+        endpoint = "/v5/account/quick-repayment"
+        return self._post(endpoint, params)
+
+    def post_set_collateral_coin(self, params: dict):
+        """
+        You can decide whether the assets in the Unified account needs to be collateral coins.
+        https://bybit-exchange.github.io/docs/v5/account/set-collateral
+
+        Args:
+            params (dict):
+            Parameter           Required    Type        Comments
+            coin                true        string      BTC, ETH...
+            collateralSwitch    true        string      "ON" or "OFF"
+        """
+        endpoint = "/v5/account/set-collateral-switch"
+        return self._post(endpoint, params)
+
+    def get_collateral_info(self, params: dict = None):
+        """Get the collateral information of the current unified margin account,
+        including loan interest rate, loanable amount,
+        collateral conversion rate,
+        whether it can be mortgaged as margin, etc.
+
+        https://bybit-exchange.github.io/docs/v5/account/collateral-info
+
+        Args:
+            params (dict):
+            Parameter   Required    Type        Comments
+            currency    false       string
+        """
+        endpoint = "/v5/account/collateral-info"
+        return self._get(endpoint, params)
+
     def get_fee_rate(self, params: dict):
         """Get the trading fee rate.
 
@@ -359,6 +397,22 @@ class Bybit:
         """
         endpoint = "/v5/account/fee-rate"
         return self._get(endpoint, params)
+
+    def get_account_info(self, params: dict = None):
+        """Query the margin mode configuration of the account.
+
+        https://bybit-exchange.github.io/docs/v5/account/account-info
+        """
+        endpoint = "/v5/account/info"
+        return self._get(endpoint, params)
+
+    def post_set_margin_mode(self, params: dict = None):
+        """Default is regular margin mode
+
+        https://bybit-exchange.github.io/docs/v5/account/set-margin-mode
+        """
+        endpoint = "/v5/account/set-margin-mode"
+        return self._post(endpoint, params)
 
     #############
     ### Asset ###
@@ -420,13 +474,36 @@ class Bybit:
         endpoint = "/v5/asset/transfer/query-universal-transfer-list"
         return self._get(endpoint, params)
 
+    ############
+    ### User ###
+    ############
 
-if __name__ == "__main__":
-    account = BYBIT_MCA_MAIN_TRADE
-    client = Bybit(
-        account["api_key"],
-        account["api_secret"],
-    )
+    def get_api_key_info(self, params: Optional[Dict] = None):
+        """
+        Get the information of the api key.
+        Use the api key pending to be checked to call the endpoint.
+        Both master and sub user's api key are applicable.
 
-    int_transf = client.get_internal_transfer_records()
-    print(int_transf)
+        https://bybit-exchange.github.io/docs/v5/user/apikey-info
+
+        """
+        endpoint = "/v5/user/query-api"
+        return self._get(endpoint, params)
+
+    #############
+    ### UTA #####
+    #############
+
+    def get_vip_margin_data(self, params: Optional[Dict] = None):
+        """
+        This margin data is for Unified account in particular.
+        https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
+
+        Args:
+            params (dict):
+            Parameter       Required    Type        Comments
+            vipLevel        false       string      Vip level
+            currency        false       string      Coin name, uppercase only
+        """
+        endpoint = "/v5/spot-margin-trade/data"
+        return self._get(endpoint, params)

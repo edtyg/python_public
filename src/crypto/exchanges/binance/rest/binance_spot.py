@@ -5,9 +5,7 @@ https://binance-docs.github.io/apidocs/spot/en/#change-log
 
 from typing import Dict, Optional
 
-import requests
-
-from src.crypto.exchanges.binance.rest.binance_client import Binance
+from crypto.exchanges.binance.rest.binance_client import Binance
 
 
 class BinanceSpot(Binance):
@@ -21,41 +19,6 @@ class BinanceSpot(Binance):
     def __init__(self, apikey: str = None, apisecret: str = None):
         super().__init__(apikey, apisecret)
         self.binance_spot_base_url = "https://api.binance.com"
-        self.timeout = 5
-
-    #########################
-    ### Standard Requests ###
-    #########################
-
-    def _get(self, url: str):
-        """
-        GET Requests
-        """
-        try:
-            response = requests.get(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as e:
-            print(e)
-
-    def _post(self, url: str):
-        """
-        POST Requests
-        """
-        try:
-            response = requests.post(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as e:
-            print(e)
-
-    def _delete(self, url: str):
-        """
-        DELETE Request
-        """
-        try:
-            response = requests.delete(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as e:
-            print(e)
 
     ########################
     ### wallet endpoints ###
@@ -63,27 +26,25 @@ class BinanceSpot(Binance):
 
     def get_system_status(self) -> dict:
         """
-        PUBLIC
-        GET request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/spot/en/#system-status-system
         """
         endpoint = "/sapi/v1/system/status"
-        return self._get(self.binance_spot_base_url + endpoint)
+        return self.rest_requests("PUBLIC", "GET", self.binance_spot_base_url, endpoint)
 
-    def get_all_coins_infomation(self) -> dict:
+    def get_all_coins_information(self) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
         """
         endpoint = "/sapi/v1/capital/config/getall"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint
+        )
 
     def get_deposit_history(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#deposit-history-supporting-network-user_data
 
         Args:
@@ -105,13 +66,13 @@ class BinanceSpot(Binance):
             txId 	        STRING 	NO
         """
         endpoint = "/sapi/v1/capital/deposit/hisrec"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_withdrawal_history(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#withdraw-history-supporting-network-user_data
 
         Args:
@@ -134,13 +95,13 @@ class BinanceSpot(Binance):
             timestamp 	        LONG 	YES
         """
         endpoint = "/sapi/v1/capital/withdraw/history"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_deposit_address(self, params: dict) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#deposit-address-supporting-network-user_data
 
         Args:
@@ -153,13 +114,29 @@ class BinanceSpot(Binance):
             timestamp 	LONG 	YES
         """
         endpoint = "/sapi/v1/capital/deposit/address"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
+
+    def get_asset_detail(self, params: Optional[Dict] = None) -> dict:
+        """
+        private GET request
+        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-user_data
+        Args:
+            params (dict):
+            Name        Type    Mandatory   Description
+            asset 	    STRING 	NO
+            recvWindow 	LONG 	NO
+            timestamp 	LONG 	YES
+        """
+        endpoint = "/sapi/v1/capital/deposit/address"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_trade_fee(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#trade-fee-user_data
 
         Args:
@@ -170,13 +147,13 @@ class BinanceSpot(Binance):
             timestamp 	LONG 	YES
         """
         endpoint = "/sapi/v1/asset/tradeFee"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def post_user_universal_transfer(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#user-universal-transfer-user_data
 
         Transfers between spot/margin/futures accounts
@@ -205,13 +182,13 @@ class BinanceSpot(Binance):
         /PORTFOLIO_MARGIN
         """
         endpoint = "/sapi/v1/asset/transfer"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._post(url)
+        return self.rest_requests(
+            "PRIVATE", "POST", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_user_universal_transfer(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-user-universal-transfer-history-user_data
 
         Get transfer records between accounts
@@ -230,13 +207,13 @@ class BinanceSpot(Binance):
             timestamp	LONG	YES
         """
         endpoint = "/sapi/v1/asset/transfer"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def post_user_asset(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#user-asset-user_data
         Args:
             params (dict):
@@ -247,13 +224,13 @@ class BinanceSpot(Binance):
             timestamp 	        LONG 	YES
         """
         endpoint = "/sapi/v3/asset/getUserAsset"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._post(url)
+        return self.rest_requests(
+            "PRIVATE", "POST", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_user_wallet_balance(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-user-wallet-balance-user_data
 
         gets balances from each wallet - in btc terms
@@ -265,17 +242,63 @@ class BinanceSpot(Binance):
             timestamp 	        LONG 	YES
         """
         endpoint = "/sapi/v1/asset/wallet/balance"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     #############################
     ### sub-account endpoints ###
     #############################
 
+    def get_universal_transfer_history_master(
+        self, params: Optional[Dict] = None
+    ) -> dict:
+        """
+        private GET request
+        https://binance-docs.github.io/apidocs/spot/en/#universal-transfer-for-master-account
+        Query Universal Transfer History (For Master Account)
+        Args:
+            params (dict):
+            Name                Type    Mandatory   Description
+            fromEmail	        STRING	NO
+            toEmail	            STRING	NO
+            clientTranId	    STRING	NO
+            startTime	        LONG	NO
+            endTime	            LONG	NO
+            page	            INT	    NO	        Default 1
+            limit	            INT	    NO	        Default 500, Max 500
+            recvWindow	        LONG	NO
+            timestamp	        LONG	YES
+        """
+        endpoint = "/sapi/v1/sub-account/transfer/subUserHistory"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
+
+    def get_managed_sub_acc_deposit_address_master(
+        self, params: Optional[Dict] = None
+    ) -> dict:
+        """
+        private GET request
+        https://binance-docs.github.io/apidocs/spot/en/#get-managed-sub-account-deposit-address-for-investor-master-account-user_data
+        Get Managed Sub-account Deposit Address (For Investor Master Account
+        Args:
+            params (dict):
+            Name        Type    Mandatory   Description
+            email	    STRING	YES	        Sub user email
+            coin    	STRING	YES
+            network	    STRING	NO	        networks can be found in GET /sapi/v1/capital/deposit/address
+            recvWindow	LONG	NO
+            timestamp	LONG	YES
+        """
+        endpoint = "/sapi/v1/managed-subaccount/deposit/address"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
+
     def get_subacc_transfer_history(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#sub-account-transfer-history-for-sub-account
         Sub-account Transfer History (For Sub-account) - query using sub acc api key
 
@@ -294,17 +317,34 @@ class BinanceSpot(Binance):
             timestamp	        LONG	YES
         """
         endpoint = "/sapi/v1/sub-account/transfer/subUserHistory"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     #############################
     ### market data endpoints ###
     #############################
 
+    def get_exchange_information(self, params: dict) -> dict:
+        """
+        PUBLIC GET request
+        https://binance-docs.github.io/apidocs/spot/en/#exchange-information
+        Current exchange trading rules and symbol information
+
+        Args:
+            params (dict):
+            Name        Type    Mandatory   Description
+            symbol 	    STRING 	YES         "BTCUSDT"
+            symbols     STRING 	YES         ["BTCUSDT","BNBUSDT"] either symbol or symbols
+        """
+        endpoint = "/api/v3/exchangeInfo"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_spot_base_url, endpoint, params
+        )
+
     def get_orderbook(self, params: dict) -> dict:
         """
-        PUBLIC
-        GET request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/spot/en/#order-book
 
         Args:
@@ -314,17 +354,29 @@ class BinanceSpot(Binance):
             limit 	INT 	NO 	        Default 100; max 5000.
         """
         endpoint = "/api/v3/depth"
-        response = requests.get(
-            self.binance_spot_base_url + endpoint,
-            params,
-            timeout=self.timeout,
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_spot_base_url, endpoint, params
         )
-        return response.json()
+
+    def get_recent_trade_list(self, params: dict) -> dict:
+        """
+        PUBLIC GET request
+        https://binance-docs.github.io/apidocs/spot/en/#recent-trades-list
+
+        Args:
+            params (dict):
+            Name    Type    Mandatory   Description
+            symbol 	STRING 	YES
+            limit 	INT 	NO 	Default 100; max 5000.
+        """
+        endpoint = "/api/v3/trades"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_kline(self, params: dict) -> dict:
         """
-        PUBLIC
-        GET request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
 
         Args:
@@ -337,17 +389,30 @@ class BinanceSpot(Binance):
             limit 	    INT 	NO 	        Default 500; max 1000.
         """
         endpoint = "/api/v3/klines"
-        response = requests.get(
-            self.binance_spot_base_url + endpoint,
-            params,
-            timeout=self.timeout,
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_spot_base_url, endpoint, params
         )
-        return response.json()
+
+    def get_old_trade_lookup(self, params: dict) -> dict:
+        """
+        PUBLIC GET request
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+
+        Args:
+            params (dict):
+            Name        Type    Mandatory   Description
+            symbol 	    STRING 	YES         "BTCUSDT"
+            limit       INT 	NO          Default 500; max 1000.
+            fromId      LONG    NO          Trade id to fetch from. Default gets most recent trades.
+        """
+        endpoint = "/api/v3/historicalTrades"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_symbol_price_ticker(self, params: dict) -> dict:
         """
-        PUBLIC
-        GET request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
 
         Args:
@@ -357,12 +422,9 @@ class BinanceSpot(Binance):
             symbols     STRING 	YES         ["BTCUSDT","BNBUSDT"] either symbol or symbols
         """
         endpoint = "/api/v3/ticker/price"
-        response = requests.get(
-            self.binance_spot_base_url + endpoint,
-            params,
-            timeout=self.timeout,
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_spot_base_url, endpoint, params
         )
-        return response.json()
 
     ############################
     ### spot account / trade ###
@@ -370,8 +432,7 @@ class BinanceSpot(Binance):
 
     def post_order(self, params: dict) -> dict:
         """
-        PRIVATE
-        POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
 
         Send in a new order.
@@ -407,13 +468,13 @@ class BinanceSpot(Binance):
             LIMIT_MAKER 	    quantity, price
         """
         endpoint = "/api/v3/order"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._post(url)
+        return self.rest_requests(
+            "PRIVATE", "POST", self.binance_spot_base_url, endpoint, params
+        )
 
     def delete_order(self, params: dict) -> dict:
         """
-        PRIVATE
-        DELETE request
+        PRIVATE DELETE request
         https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
 
         Cancel an active order.
@@ -429,17 +490,13 @@ class BinanceSpot(Binance):
             timestamp 	        LONG 	    YES
         """
         endpoint = "/api/v3/order"
-        url = self.signed_request_url(
-            self.binance_spot_base_url,
-            endpoint,
-            params,
+        return self.rest_requests(
+            "PRIVATE", "DELETE", self.binance_spot_base_url, endpoint, params
         )
-        return self._delete(url)
 
     def delete_all_open_orders(self, params: dict) -> dict:
         """
-        PRIVATE
-        DELETE request
+        PRIVATE DELETE request
         https://binance-docs.github.io/apidocs/spot/en/#cancel-all-open-orders-on-a-symbol-trade
 
         Cancels all active orders on a symbol.
@@ -452,17 +509,13 @@ class BinanceSpot(Binance):
             timestamp 	        LONG 	    YES
         """
         endpoint = "/api/v3/openOrders"
-        url = self.signed_request_url(
-            self.binance_spot_base_url,
-            endpoint,
-            params,
+        return self.rest_requests(
+            "PRIVATE", "DELETE", self.binance_spot_base_url, endpoint, params
         )
-        return self._delete(url)
 
     def get_query_order(self, params: dict) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-order-user_data
 
         Check an order's status.
@@ -477,17 +530,13 @@ class BinanceSpot(Binance):
             timestamp 	        LONG 	YES
         """
         endpoint = "/api/v3/order"
-        url = self.signed_request_url(
-            self.binance_spot_base_url,
-            endpoint,
-            params,
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
         )
-        return self._get(url)
 
     def get_current_open_orders(self, params: Optional[Dict] = None) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#current-open-orders-user_data
 
         Get all open orders on a symbol. Careful when accessing this with no symbol.
@@ -500,13 +549,13 @@ class BinanceSpot(Binance):
             timestamp 	LONG 	YES
         """
         endpoint = "/api/v3/openOrders"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_all_orders(self, params: dict) -> dict:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#all-orders-user_data
 
         Get all account orders; active, canceled, or filled.
@@ -523,13 +572,13 @@ class BinanceSpot(Binance):
             timestamp 	LONG 	YES
         """
         endpoint = "/api/v3/allOrders"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
 
     def get_account_trade_list(self, params: dict) -> list:
         """
-        PRIVATE
-        GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#account-trade-list-user_data
 
         Get trades for a specific account and symbol.
@@ -547,5 +596,52 @@ class BinanceSpot(Binance):
             timestamp 	LONG 	YES
         """
         endpoint = "/api/v3/myTrades"
-        url = self.signed_request_url(self.binance_spot_base_url, endpoint, params)
-        return self._get(url)
+        return self.rest_requests(
+            "PRIVATE", "GET", self.binance_spot_base_url, endpoint, params
+        )
+
+    #################
+    ### Websocket ###
+    #################
+
+    def post_create_listen_key(self):
+        """
+        PRIVATE POST request
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
+
+        Creates a websocket listen key for authenticated connections
+        valid for 60 mins
+        doing a put request will extend by 60 mins
+        """
+        endpoint = "/api/v3/userDataStream"
+        return self.rest_requests(
+            "PRIVATE", "POST", self.binance_spot_base_url, endpoint
+        )
+
+    def put_listen_key(self):
+        """
+        PRIVATE PUT request
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
+
+        Creates a websocket listen key for authenticated connections
+        valid for 60 mins
+        doing a put request will extend by 60 mins
+        """
+        endpoint = "/api/v3/userDataStream"
+        return self.rest_requests(
+            "PRIVATE", "PUT", self.binance_spot_base_url, endpoint
+        )
+
+    def delete_listen_key(self):
+        """
+        PRIVATE DELETE request
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
+
+        Creates a websocket listen key for authenticated connections
+        valid for 60 mins
+        doing a put request will extend by 60 mins
+        """
+        endpoint = "/api/v3/userDataStream"
+        return self.rest_requests(
+            "PRIVATE", "DELETE", self.binance_spot_base_url, endpoint
+        )

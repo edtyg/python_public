@@ -5,9 +5,7 @@ https://binance-docs.github.io/apidocs/spot/en/#change-log
 
 from typing import Dict, Optional
 
-import requests
-
-from src.crypto.exchanges.binance.rest.binance_client import Binance
+from crypto.exchanges.binance.rest.binance_client import Binance
 
 
 class BinanceIsolatedMargin(Binance):
@@ -18,49 +16,14 @@ class BinanceIsolatedMargin(Binance):
     def __init__(self, apikey: str, apisecret: str):
         super().__init__(apikey, apisecret)
         self.spot_margin_url = "https://api.binance.com"
-        self.timeout = 3
-
-    ########################################################
-    ### adding exceptions to sending get / post requests ###
-    ########################################################
-
-    def send_get_request(self, url: str):
-        """
-        sending authenticated get requests
-        """
-        try:
-            response = requests.get(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as error:
-            print(error)
-
-    def send_post_request(self, url: str):
-        """
-        sending authenticated post requests
-        """
-        try:
-            response = requests.post(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as error:
-            print(error)
-
-    def send_delete_request(self, url: str):
-        """
-        sending authenticated delete requests
-        """
-        try:
-            response = requests.delete(url, headers=self.headers, timeout=self.timeout)
-            return response.json()
-        except Exception as error:
-            print(error)
 
     ######################
     ### spot endpoints ###
     ######################
 
-    def get_exchange_infomation(self, symbol: str = None) -> dict:
+    def get_exchange_information(self, params: dict) -> dict:
         """
-        public request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/spot/en/#exchange-information
         Current exchange trading rules and symbol information
 
@@ -70,36 +33,26 @@ class BinanceIsolatedMargin(Binance):
             symbol 	    STRING 	YES         "BTCUSDT"
             symbols     STRING 	YES         ["BTCUSDT","BNBUSDT"] either symbol or symbols
         """
-        if symbol:
-            response = requests.get(
-                self.spot_margin_url + "/api/v3/exchangeInfo",
-                params={"symbol": symbol},
-                timeout=self.timeout,
-            )
-        else:
-            response = requests.get(
-                self.spot_margin_url + "/api/v3/exchangeInfo",
-                timeout=self.timeout,
-            )
-
-        data = response.json()
-        return data
+        endpoint = "/api/v3/exchangeInfo"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_symbol_price_ticker(self, params: dict) -> dict:
-        # public request
-        # https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
         """
+        PUBLIC GET request
+        https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
+
         Args:
             params (dict):
             Name        Type    Mandatory   Description
             symbol 	    STRING 	YES         "BTCUSDT"
             symbols     STRING 	YES         ["BTCUSDT","BNBUSDT"] either symbol or symbols
         """
-        response = requests.get(
-            self.spot_margin_url + "/api/v3/ticker/price", params, timeout=self.timeout
+        endpoint = "/api/v3/ticker/price"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.spot_margin_url, endpoint, params
         )
-        data = response.json()
-        return data
 
     #######################
     ### isolated margin ###
@@ -108,8 +61,9 @@ class BinanceIsolatedMargin(Binance):
     # borrow and repay
     def post_margin_account_borrow_repay(self, params: dict) -> dict:
         """
-        private POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#margin-account-borrow-repay-margin
+
         Margin account borrow/repay(MARGIN)
         Cross + Isolated
 
@@ -122,14 +76,16 @@ class BinanceIsolatedMargin(Binance):
             amount      STRING  YES
             type        STRING  YES         BORROW or REPAY
         """
-        url_endpoint = "/sapi/v1/margin/borrow-repay"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_post_request(url)
+        endpoint = "/sapi/v1/margin/borrow-repay"
+        return self.rest_requests(
+            "PRIVATE", "POST", self.spot_margin_url, endpoint, params
+        )
 
     def get_margin_account_borrow_repay(self, params: dict) -> dict:
         """
-        private GET request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#query-borrow-repay-records-in-margin-account-user_data
+
         Query borrow/repay records in Margin account
         Cross + Isolated
 
@@ -145,15 +101,17 @@ class BinanceIsolatedMargin(Binance):
             size        LONG    NO          Default: 10 Max: 100
             type        STRING  YES         BORROW or REPAY
         """
-        url_endpoint = "/sapi/v1/margin/borrow-repay"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_post_request(url)
+        endpoint = "/sapi/v1/margin/borrow-repay"
+        return self.rest_requests(
+            "PRIVATE", "POST", self.spot_margin_url, endpoint, params
+        )
 
     # placing orders
     def get_orderbook(self, params: dict) -> dict:
         """
-        public GET request
+        PUBLIC GET request
         https://binance-docs.github.io/apidocs/spot/en/#order-book
+
         same orderbook as for spot
         Args:
             params (dict):
@@ -161,15 +119,16 @@ class BinanceIsolatedMargin(Binance):
             symbol 	STRING 	YES
             limit 	INT 	NO 	Default 100; max 5000.
         """
-        response = requests.get(
-            self.spot_margin_url + "/api/v3/depth", params, timeout=self.timeout
+        endpoint = "/api/v3/depth"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.spot_margin_url, endpoint, params
         )
-        return response.json()
 
     def post_margin_new_order(self, params: dict) -> dict:
         """
-        private POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-order-trade
+
         Post a new order for margin account.
         Cross + Isolated
 
@@ -192,14 +151,16 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	        LONG 	    NO 	The value cannot be greater than 60000
             timestamp 	        LONG 	    YES
         """
-        url_endpoint = "/sapi/v1/margin/order"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_post_request(url)
+        endpoint = "/sapi/v1/margin/order"
+        return self.rest_requests(
+            "PRIVATE", "POST", self.spot_margin_url, endpoint, params
+        )
 
     def delete_margin_cancel_order(self, params: dict) -> dict:
         """
-        private DELETE request
+        PRIVATE DELETE request
         https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-order-trade
+
         Cancel an active order for margin account.
         Cross + Isolated
 
@@ -214,14 +175,16 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	        LONG 	NO 	        The value cannot be greater than 60000
             timestamp 	        LONG 	YES
         """
-        url_endpoint = "/sapi/v1/margin/order"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_delete_request(url)
+        endpoint = "/sapi/v1/margin/order"
+        return self.rest_requests(
+            "PRIVATE", "DELETE", self.spot_margin_url, endpoint, params
+        )
 
     def get_interest_history(self, params: Optional[Dict] = None) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data
+
         Gets interest history
         Cross + Isolated
 
@@ -239,14 +202,16 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	    LONG 	NO 	        The value cannot be greater than 60000
             timestamp 	    LONG 	YES
         """
-        url_endpoint = "/sapi/v1/margin/interestHistory"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/interestHistory"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_margin_account_order(self, params: dict) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-order-user_data
+
         Gets single order info - either orderId or origClientOrderId required
         Cross + Isolated
 
@@ -258,14 +223,16 @@ class BinanceIsolatedMargin(Binance):
             orderId             LONG    NO
             origClientOrderId   STRING  NO
         """
-        url_endpoint = "/sapi/v1/margin/order"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/order"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_margin_account_open_orders(self, params: dict) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-orders-user_data
+
         Gets all open orders
         Cross + Isolated
 
@@ -275,14 +242,16 @@ class BinanceIsolatedMargin(Binance):
             symbol 	            STRING 	YES
             isIsolated          STRING  NO          TRUE or FALSE
         """
-        url_endpoint = "/sapi/v1/margin/openOrders"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/openOrders"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_margin_account_all_orders(self, params: dict) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-all-orders-user_data
+
         Gets historical orders
         Cross + Isolated
 
@@ -296,14 +265,16 @@ class BinanceIsolatedMargin(Binance):
             endTime             LONG    NO
             limit               INT     NO          Default 500, max 500
         """
-        url_endpoint = "/sapi/v1/margin/allOrders"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/allOrders"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_margin_account_trades(self, params: dict) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-trade-list-user_data
+
         Gets historical margin trades
         Cross + Isolated
 
@@ -318,14 +289,16 @@ class BinanceIsolatedMargin(Binance):
             fromId              LONG    NO          TradeId to fetch from
             limit               INT     NO          Default 500, max 500
         """
-        url_endpoint = "/sapi/v1/margin/myTrades"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/myTrades"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_isolated_margin_info(self) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-account-info-user_data
+
         Gets balances for isolated margin account
         Isolated only
 
@@ -335,9 +308,8 @@ class BinanceIsolatedMargin(Binance):
         locked
         netasset -> can be negative
         """
-        url_endpoint = "/sapi/v1/margin/isolated/account"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/isolated/account"
+        return self.rest_requests("PRIVATE", "GET", self.spot_margin_url, endpoint)
 
     #######################
     ### toggle bnb burn ###
@@ -345,7 +317,7 @@ class BinanceIsolatedMargin(Binance):
 
     def post_toggle_bnb_burn(self, params: dict) -> dict:
         """
-        private POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#toggle-bnb-burn-on-spot-trade-and-margin-interest-user_data
 
         Args:
@@ -356,13 +328,14 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	    LONG 	NO
             timestamp 	    LONG 	YES
         """
-        url_endpoint = "/sapi/v1/bnbBurn"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_post_request(url)
+        endpoint = "/sapi/v1/bnbBurn"
+        return self.rest_requests(
+            "PRIVATE", "POST", self.spot_margin_url, endpoint, params
+        )
 
     def get_bnb_burn_status(self, params: Optional[Dict] = None) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#get-bnb-burn-status-user_data
 
         Args:
@@ -371,23 +344,18 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	    LONG 	NO
             timestamp 	    LONG 	YES
         """
-        url_endpoint = "/sapi/v1/bnbBurn"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/bnbBurn"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     ######################
     ### post transfers ###
     ######################
 
-    def get_api_key_permission(self) -> dict:
-        """Gets permissions set for api key"""
-        url_endpoint = "/sapi/v1/account/apiRestrictions"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint)
-        return self.send_get_request(url)
-
     def post_universal_transfer(self, params: dict) -> dict:
         """
-        private POST request
+        PRIVATE POST request
         https://binance-docs.github.io/apidocs/spot/en/#user-universal-transfer-user_data
 
         fromSymbol must be sent when type are ISOLATEDMARGIN_MARGIN and ISOLATEDMARGIN_ISOLATEDMARGIN
@@ -414,9 +382,10 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	    LONG 	    NO
             timestamp 	    LONG 	    YES
         """
-        url_endpoint = "/sapi/v1/asset/transfer"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_post_request(url)
+        endpoint = "/sapi/v1/asset/transfer"
+        return self.rest_requests(
+            "PRIVATE", "POST", self.spot_margin_url, endpoint, params
+        )
 
     ########################
     ### Get Capital Flow ###
@@ -424,7 +393,7 @@ class BinanceIsolatedMargin(Binance):
 
     def get_capital_flow(self, params: dict) -> dict:
         """
-        private GET request
+        PRIVATE GET request
         https://binance-docs.github.io/apidocs/spot/en/#get-cross-or-isolated-margin-capital-flow-user_data
 
         TRANSFER("Transfer")
@@ -457,13 +426,14 @@ class BinanceIsolatedMargin(Binance):
             recvWindow 	    LONG 	    NO
             timestamp 	    LONG 	    YES
         """
-        url_endpoint = "/sapi/v1/margin/capital-flow"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/capital-flow"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
 
     def get_max_borrow_amt(self, params: dict) -> dict:
         """
-        private GET method
+        PRIVATE GET method
         https://binance-docs.github.io/apidocs/spot/en/#query-max-borrow-user_data
 
         Args:
@@ -474,6 +444,45 @@ class BinanceIsolatedMargin(Binance):
             recvWindow	    LONG	NO	        The value cannot be greater than 60000
             timestamp	    LONG	YES
         """
-        url_endpoint = "/sapi/v1/margin/maxBorrowable"
-        url = self.signed_request_url(self.spot_margin_url, url_endpoint, params)
-        return self.send_get_request(url)
+        endpoint = "/sapi/v1/margin/maxBorrowable"
+        return self.rest_requests(
+            "PRIVATE", "GET", self.spot_margin_url, endpoint, params
+        )
+
+    #################
+    ### Websocket ###
+    #################
+
+    def post_create_listen_key(self):
+        """
+        PRIVATE POST request
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+
+        Creates a websocket listen key for authenticated connections
+        """
+        endpoint = "/sapi/v1/userDataStream/isolated"
+        return self.rest_requests("PRIVATE", "POST", self.spot_margin_url, endpoint)
+
+    def put_listen_key(self):
+        """
+        PRIVATE PUT request
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
+
+        Creates a websocket listen key for authenticated connections
+        valid for 60 mins
+        doing a put request will extend by 60 mins
+        """
+        endpoint = "/sapi/v1/userDataStream/isolated"
+        return self.rest_requests("PRIVATE", "PUT", self.spot_margin_url, endpoint)
+
+    def delete_listen_key(self):
+        """
+        PRIVATE DELETE request
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+
+        Creates a websocket listen key for authenticated connections
+        valid for 60 mins
+        doing a put request will extend by 60 mins
+        """
+        endpoint = "/api/v3/userDataStream/isolated"
+        return self.rest_requests("PRIVATE", "DELETE", self.spot_margin_url, endpoint)

@@ -8,11 +8,8 @@ from typing import Optional
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_exchanges.okx import (
-    OKX_MCA_LTP1_READ,
-    OKX_MCA_MAIN_READ,
-)
-from python.crypto.exchanges.okx.rest.okx_client import Okx
+from keys.api_work.crypto_exchanges.okx import OKX_MCA_LTP1_READ, OKX_MCA_MAIN_READ
+from src.crypto.exchanges.okx.rest.okx_client import Okx
 
 
 # get_transaction_details_3m

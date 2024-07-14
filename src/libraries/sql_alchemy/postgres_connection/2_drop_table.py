@@ -4,14 +4,14 @@ Postgres database - dropping table
 
 from sqlalchemy import MetaData
 
-from keys.api_personal.databases.postgres import PGSQL_UBUNTU_ADMIN, PGSQL_VM_ADMIN
+from keys.api_personal.databases.postgres import PGSQL_VM_ADMIN
 from src.libraries.sql_alchemy.sqlalchemy_client import SqlAlchemyConnector
 
 
-def drop_table_cme(client):
+def drop_table(client):
     """Dropping table"""
 
-    table_name = "testing"
+    table_name = "cme"
     metadata = MetaData()
 
     try:
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     client.connect("postgres")
 
     # Drop the table first
-    drop_table_cme(client)
+    drop_table(client)

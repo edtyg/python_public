@@ -69,6 +69,23 @@ class DeribitRestClient:
         endpoint = "/public/get_currencies"
         return self._get(endpoint)
 
+    def get_funding_rate_history(self, params: dict):
+        """
+        Public method
+
+        Retrieves hourly historical interest rate for requested PERPETUAL instrument.
+        https://docs.deribit.com/#public-get_funding_rate_history
+
+        Args:
+            params (dict):
+            Parameter 	            Required 	Type
+            instrument_name 	    true 	    str
+            start_timestamp 	    true 	    int
+            end_timestamp           true        int
+        """
+        endpoint = "/public/get_funding_rate_history"
+        return self._get(endpoint, params)
+
     def get_instruments(self, params: dict):
         """
         Public method

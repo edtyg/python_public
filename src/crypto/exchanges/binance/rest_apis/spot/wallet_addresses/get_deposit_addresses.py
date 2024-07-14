@@ -2,7 +2,10 @@
 Address
 """
 
-from src.crypto.exchanges.binance.rest_apis.spot.spot_account import spot_client_read
+from src.crypto.exchanges.binance.rest_apis.spot.spot_account import (
+    mca_ltp_client_read,
+    spot_client_read,
+)
 
 
 def get_addresses(client):
@@ -17,5 +20,5 @@ def get_addresses(client):
 
 if __name__ == "__main__":
 
-    address = get_addresses(spot_client_read)
+    address = get_addresses(mca_ltp_client_read)
     print(address)

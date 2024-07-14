@@ -1,6 +1,6 @@
 """
 Coinbase Exchange APIs - different from brokerage api
-https://docs.cloud.coinbase.com/exchange/reference
+https://docs.cdp.coinbase.com/exchange/docs/welcome/
 """
 
 import base64
@@ -183,4 +183,19 @@ class CoinbaseExchange:
             end         no          str         timestamp
         """
         endpoint = f"/products/{product_id}/candles"
+        return self._get(endpoint, params)
+
+    def get_product_trades(self, product_id: str, params: Optional[Dict] = None):
+        """
+        Gets a list the latest trades for a product.
+        https://docs.cdp.coinbase.com/exchange/reference/exchangerestapi_getproducttrades/
+
+        Args:
+            params (dict):
+            Parameter   Required    Type        Comments
+            limit       no          int64       1000
+            before      no          str         timestamp
+            after       no          str         timestamp
+        """
+        endpoint = f"/products/{product_id}/trades"
         return self._get(endpoint, params)
