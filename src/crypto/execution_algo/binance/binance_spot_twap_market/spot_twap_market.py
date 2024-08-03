@@ -1,5 +1,5 @@
 """
-Binance SPOT TWAP algo - Market orders
+Binance SPOT Account TWAP algo - Market orders
 """
 
 import datetime as dt
@@ -10,10 +10,7 @@ import time
 
 import pandas as pd
 
-from keys.api_work.crypto_exchanges.binance import (
-    BINANCE_MCA_LTP1_TRADE,
-    BINANCE_MCA_MAIN_TRADE,
-)
+from keys.api_work.crypto_exchanges.binance import BINANCE_MCA_MAIN_TRADE
 from src.crypto.exchanges.binance.rest.binance_spot import BinanceSpot
 from src.libraries.configparser.config_setter import ConfigSetter
 from src.libraries.logging.logger_client import LoggerClient

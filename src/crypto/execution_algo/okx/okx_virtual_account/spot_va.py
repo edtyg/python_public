@@ -96,11 +96,15 @@ class VirtualAccount(Okx, LoggerClient):
             # trading account balance
             elif input_number == "2":
                 print("pulling trading account balance")
-                user_assets = self.get_balance_trading()["data"][0]["details"]
-                self.logger.info(user_assets)
-                df = pd.DataFrame(user_assets)
-                df = df[["availBal", "availEq", "cashBal", "ccy", "uTime"]]
-                print(df)
+                try:
+                    user_assets = self.get_balance_trading()["data"][0]["details"]
+                    self.logger.info(user_assets)
+                    df = pd.DataFrame(user_assets)
+                    df = df[["availBal", "availEq", "cashBal", "ccy", "uTime"]]
+                    print(df)
+                except Exception as e:
+                    # print(e)
+                    print("no balances")
 
             # pull recent trades
             elif input_number == "3":
