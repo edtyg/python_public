@@ -38,7 +38,7 @@ class BinanceAlgoTrading(HelperBinance):
 
         # check on algo type
         if trading_params[Constants.ALGO_TYPE] not in list(AlgoTypes):
-            print("Selected Algo not in list, please check again")
+            print(f"Selected Algo not in list, select the following {list(AlgoTypes)}")
             return
 
         print(
@@ -149,5 +149,5 @@ class BinanceAlgoTrading(HelperBinance):
             HelperBinance.twap_market_order(self, trading_params)
         elif trading_params[Constants.ALGO_TYPE] == "TWAP_MARKET_OTC":
             HelperBinance.twap_market_otc_order(self, trading_params)
-        else:
-            print("Selected Algo Not Recognised")
+        elif trading_params[Constants.ALGO_TYPE] == "TWAP_LIMIT":
+            HelperBinance.twap_limit_order(self, trading_params)

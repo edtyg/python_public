@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
     # sending normal message
     resp = TelegramMessenger.send_message(
-        10,
+        5,
         f"{TelegramMessenger.fire_emoji*3} hi testing {TelegramMessenger.fire_emoji*3}",
     )
 

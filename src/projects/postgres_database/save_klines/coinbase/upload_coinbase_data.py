@@ -5,6 +5,7 @@ latest row not finalized
 
 import datetime as dt
 import sys
+import time
 from typing import Optional
 
 import pandas as pd
@@ -153,6 +154,9 @@ if __name__ == "__main__":
     table_name = f"coinbase_spot_{symbol.replace('-', '')}_1m"
     interval = 60
 
+    # set cronjob to run by minute but sleep for a few seconds
+    # offset time delay on exchange side if any
+    time.sleep(5)
     upload_latest_data(
         client,
         symbol=symbol,

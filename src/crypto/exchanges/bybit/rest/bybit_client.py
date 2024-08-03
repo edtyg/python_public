@@ -16,9 +16,9 @@ import requests
 class Bybit:
     """Rest API for bybit"""
 
-    def __init__(self, apikey: str, apisecret: str):
-        self.api_key = apikey
-        self.api_secret = apisecret
+    def __init__(self, api_key: str, api_secret: str):
+        self.api_key = api_key
+        self.api_secret = api_secret
 
         self.bybit_base_url = "https://api.bybit.com"
         self.recv_window = str(5000)
@@ -84,15 +84,6 @@ class Bybit:
     ##############
     ### Market ###
     ##############
-
-    def get_server_time(self, params: Optional[Dict] = None):
-        """
-        Gets Bybit Server Time
-        https://bybit-exchange.github.io/docs/v5/market/time
-        """
-        endpoint = "/v5/market/time"
-        return self._get(endpoint, params)
-
     def get_kline(self, params: dict):
         """
         Gets Klines
@@ -162,6 +153,25 @@ class Bybit:
             baseCoin    false   str         start timestamp milliseconds
         """
         endpoint = "/v5/market/tickers"
+        return self._get(endpoint, params)
+
+    def get_funding_rate_history(self, params: dict):
+        """
+        Query for historical funding rates. Each symbol has a different funding interval.
+        For example, if the interval is 8 hours and the current time is UTC 12,
+        then it returns the last funding rate, which settled at UTC 8.
+
+        https://bybit-exchange.github.io/docs/v5/market/history-fund-rate
+
+        Args:
+            params (dict):
+            Name        Type    Mandatory   Description
+            category    true    str         spot, linear, inverse, option
+            symbol      false   str         symbol name
+            startTime   false   int         start time in timestamp ms
+            endTime     false   int         end time in timestamp ms
+        """
+        endpoint = "/v5/market/funding/history"
         return self._get(endpoint, params)
 
     #############
@@ -320,6 +330,28 @@ class Bybit:
             cursor      false       str         Use the nextPageCursor token from the response to retrieve the next page of the result set
         """
         endpoint = "/v5/execution/list"
+        return self._get(endpoint, params)
+
+    ################
+    ### position ###
+    ################
+
+    def get_position_info(self, params: dict):
+        """
+        Query real-time position data, such as position size, cumulative realizedPNL.
+        https://bybit-exchange.github.io/docs/v5/position
+
+        Args:
+            params (dict):
+            Parameter   Required    Type        Comments
+            category    true        string      for unified acc: "spot", "linear", "inverse", "option
+            symbol      true        string      Symbol
+            baseCoin    false       string      supports linear, inverse & option
+            settleCOin  false       string      supports linear, inverse & option
+            limit       false       int         default = 20, [1,50]
+            cursor      false       str         Use the nextPageCursor token from the response to retrieve the next page of the result se
+        """
+        endpoint = "/v5/position/list"
         return self._get(endpoint, params)
 
     ###############
@@ -490,9 +522,9 @@ class Bybit:
         endpoint = "/v5/user/query-api"
         return self._get(endpoint, params)
 
-    #############
-    ### UTA #####
-    #############
+    ###############################
+    ### SPOT Margin Trade (UTA) ###
+    ###############################
 
     def get_vip_margin_data(self, params: Optional[Dict] = None):
         """
@@ -507,3 +539,12 @@ class Bybit:
         """
         endpoint = "/v5/spot-margin-trade/data"
         return self._get(endpoint, params)
+
+    def get_status_leverage(self):
+        """
+        Query the Spot margin status and leverage of Unified account
+        https://bybit-exchange.github.io/docs/v5/spot-margin-uta/status
+
+        """
+        endpoint = "/v5/spot-margin-trade/state"
+        return self._get(endpoint)

@@ -110,3 +110,21 @@ class CoinMarketCap:
         """
         endpoint = "/v2/cryptocurrency/ohlcv/historical"
         return self._get(endpoint, params)
+
+    def get_quotes_historical_v3(self, params: dict):
+        """Get historical ohlcv v2
+        https://coinmarketcap.com/api/documentation/v1/#operation/getV3CryptocurrencyQuotesHistorical
+
+        Params:
+            name                type    desc
+            id                  string  coinmaketcap crypto id e.g. 1, 1027
+            symbol              string  e.g. btc
+            time_start          string  e.g. 2018-09-19
+            time_end            string  e.g. 2018-09-19
+            count               int     1...10000 default = 10
+            interval            string  hourly, daily
+            convert             str     default = "USD"
+            convert_id          str     convert by id
+        """
+        endpoint = "/v3/cryptocurrency/quotes/historical"
+        return self._get(endpoint, params)

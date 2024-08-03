@@ -530,7 +530,7 @@ class SpotTwapAlgoMarket(Okx, LoggerClient, Telegram):
                 except Exception as error:
                     print(f"placing order error: {error}")
                     self.logger.exception(error)
-                    # self.logger.info(self.message)  # logging of payload if error
+                    self.logger.info(self.message)  # logging of payload if error
 
                     try:
                         self.send_message_error(

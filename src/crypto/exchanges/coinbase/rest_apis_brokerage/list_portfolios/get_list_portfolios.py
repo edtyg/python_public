@@ -2,10 +2,8 @@
 Coinbase Brokerage - derivs acc
 """
 
-from local_credentials.api_personal.crypto_exchanges.coinbase import (
-    COINBASE_BROKERAGE_READ,
-)
-from python.crypto.exchanges.coinbase.rest.coinbase_brokerage_client import (
+from keys.api_personal.crypto_exchanges.coinbase import COINBASE_BROKERAGE_READ
+from src.crypto.exchanges.coinbase.rest.coinbase_brokerage_client import (
     CoinbaseBrokerage,
 )
 
@@ -39,8 +37,8 @@ if __name__ == "__main__":
         account["api_secret"],
     )
 
-    # df = get_portfolio(coinbase_client)
-    # print(df)
+    df = get_portfolio(coinbase_client)
+    print(df)
 
-    df_breakdwn = get_portfolio_breakdwn(coinbase_client)
-    print(df_breakdwn)
+    # df_breakdwn = get_portfolio_breakdwn(coinbase_client)
+    # print(df_breakdwn)

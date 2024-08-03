@@ -4,8 +4,8 @@ Bybit Spot Account balances
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_exchanges.bybit import BYBIT_MCA_MAIN_TRADE
-from python.crypto.exchanges.bybit.rest.bybit_client import Bybit
+from keys.api_work.crypto_exchanges.bybit import BYBIT_KEYS
+from src.crypto.exchanges.bybit.rest.bybit_client import Bybit
 
 
 def get_order_history(client):
@@ -18,7 +18,8 @@ def get_order_history(client):
     order_history = client.get_order_history(
         {
             "category": "spot",
-            "symbol": "ETHUSDT",
+            "symbol": "BTCUSDT",
+            "orderId": 1738360969584970752,
         }
     )
     data = order_history["result"]["list"]
@@ -27,7 +28,7 @@ def get_order_history(client):
 
 
 if __name__ == "__main__":
-    account = BYBIT_MCA_MAIN_TRADE
+    account = BYBIT_KEYS["BYBIT_MCA_LTP1_TRADE"]
     client = Bybit(
         account["api_key"],
         account["api_secret"],

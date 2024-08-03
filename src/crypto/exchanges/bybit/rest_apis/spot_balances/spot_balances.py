@@ -5,7 +5,7 @@ Bybit Spot Account balances
 import pandas as pd
 
 from crypto.exchanges.bybit.rest.bybit_client import Bybit
-from keys.api_work.crypto_exchanges.bybit import BYBIT_MCA_LTP1_READ
+from keys.api_work.crypto_exchanges.bybit import BYBIT_KEYS
 
 
 def check_account_balances(client):
@@ -21,7 +21,7 @@ def check_account_balances(client):
     uta_balance = client.get_all_coins_balance({"accountType": "UNIFIED"})["result"][
         "balance"
     ]
-    print(uta_balance)
+
     response = {"funding": funding_balance, "uta": uta_balance}
     df_final = pd.DataFrame()
     for key, value in response.items():
@@ -31,15 +31,16 @@ def check_account_balances(client):
         df_bal["account_type"] = key
         df_bal.reset_index(drop=True, inplace=True)
         df_final = pd.concat([df_final, df_bal])
+    pd.options.display.float_format = "{:.4f}".format
     return df_final
 
 
 if __name__ == "__main__":
-    account = BYBIT_MCA_LTP1_READ
+    account = BYBIT_KEYS["BYBIT_MCA_LTP1_READ"]
     client = Bybit(
         account["api_key"],
         account["api_secret"],
     )
-
+    pd.reset_option("display.float_format")
     balances = check_account_balances(client)
     print(balances)

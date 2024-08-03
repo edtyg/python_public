@@ -405,7 +405,7 @@ class SpotTwapAlgoLimit(BinanceSpot, LoggerClient, Telegram):
                     time_sleep_offset = max(
                         0, self.time_interval_seconds - self.time_offset
                     )
-                    self.remaining_time -= self.time_offset + time_sleep_offset
+                    self.remaining_time -= time_sleep_offset
 
                     # exits loop at last clip
                     if number_of_clips == 1:

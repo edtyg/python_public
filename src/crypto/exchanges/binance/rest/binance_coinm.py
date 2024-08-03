@@ -51,7 +51,7 @@ class BinanceCoinm(Binance):
         return self.rest_requests(
             "PUBLIC", "GET", self.binance_coinm_base_url, endpoint, params
         )
-    
+
     def get_coinm_funding_rate(self, params: dict) -> dict:
         """
         PUBLIC GET method
@@ -70,6 +70,7 @@ class BinanceCoinm(Binance):
         endpoint = "/dapi/v1/fundingRate"
         return self.rest_requests(
             "PUBLIC", "GET", self.binance_coinm_base_url, endpoint, params
+        )
 
     def get_coinm_kline(self, params: dict) -> dict:
         """

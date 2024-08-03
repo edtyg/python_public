@@ -4,7 +4,7 @@ Constants
 
 from enum import auto
 
-from strenum import LowercaseStrEnum
+from strenum import LowercaseStrEnum, UppercaseStrEnum
 
 
 class Constants(LowercaseStrEnum):
@@ -28,6 +28,7 @@ class Constants(LowercaseStrEnum):
     TWAP_CLIP_INTERVAL = auto()  # intervals between each clip in seconds
     ORDER_ID = auto()  # order id sent with each order
     LEVERAGE_RATIO = auto()  # for margin trades
+    PRICE = auto()
     OTC_EXECUTION_PROPORTIONS = auto()
     PERCENTAGE_OF_VOLUME = auto()
     PERCENTAGE_OF_VOLUME_LOOKBACK = auto()
@@ -47,28 +48,42 @@ class Constants(LowercaseStrEnum):
     REMAINING_TIME = auto()
 
 
-class AlgoTypes(LowercaseStrEnum):
+class AlgoTypes(UppercaseStrEnum):
     """
     types of execution algos below
 
-    using cross-margin account in binance
+    using cross-margin account in binance (SPOT)
     UTA (Unified trading account) OKX and Bybit
-
-    5 types of algos -> TWAP, VWAP, POV, POST ONLY, SPREAD_TRADING
     """
 
-    TWAP_MARKET = "TWAP_MARKET"
-    TWAP_MARKET_OTC = "TWAP_MARKET_OTC"
-    TWAP_LIMIT = "TWAP_LIMIT"
-    VWAP_MARKET = "VWAP_MARKET"
-    POV_MARKET = "POV_MARKET"
-    POST_LIMIT = "POST_ONLY"
-    SPREAD_TRADING = "SPREAD_TRADING"
+    TWAP_MARKET = auto()
+    TWAP_MARKET_OTC = auto()
+    TWAP_LIMIT = auto()
+    VWAP_MARKET = auto()
+    POV_MARKET = auto()
+    POST_LIMIT = auto()
+    SPREAD_TRADING = auto()
 
 
-# for i in Constants:
-#     print(i.value)
-# print(list(Constants))
-# print(list(AlgoTypes))
-# print(Constants.ALGO_TYPE)
-# print(Constants.ALGO_TYPE.value)
+class Exchanges(UppercaseStrEnum):
+    """
+    Crypto Exchanges
+    """
+
+    BINANCE = auto()
+    OKX = auto()
+    BYBIT = auto()
+
+
+class Accounts(UppercaseStrEnum):
+    """
+    Exchange Accounts
+    """
+
+    BINANCE_MCA_MAIN_TRADE = auto()
+
+    OKX_MCA_MAIN_TRADE = auto()
+    OKX_MCA_LTP1_TRADE = auto()
+
+    BYBIT_MCA_MAIN_TRADE = auto()
+    BYBIT_MCA_LTP1_TRADE = auto()

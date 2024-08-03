@@ -40,7 +40,7 @@ class BybitAlgoTrading(HelperBybit):
             return
 
         print(
-            f"OKX {trading_params[Constants.ALGO_TYPE]} {trading_params[Constants.DIRECTION]} order"
+            f"BYBIT {trading_params[Constants.ALGO_TYPE]} {trading_params[Constants.DIRECTION]} order"
         )
         print(
             f"total quantity = {trading_params[Constants.QUANTITY]} {trading_params[Constants.CLIP_CCY]}"
@@ -95,8 +95,8 @@ class BybitAlgoTrading(HelperBybit):
 
         # 2 - Check if Ticker exists in OKX
         try:
-            ticker_decimal_places = HelperBybit.get_spot_ticker_info(
-                self, trading_params[Constants.TICKER]
+            ticker_decimal_places = HelperBybit.get_ticker_info(
+                self, "spot", trading_params[Constants.TICKER]
             )
         except KeyError:
             print("Ticker does not exist in OKX - please check again")
@@ -146,5 +146,7 @@ class BybitAlgoTrading(HelperBybit):
         ### Strategy Specific Checks ###
         if trading_params[Constants.ALGO_TYPE] == "TWAP_MARKET":
             HelperBybit.twap_market_order(self, trading_params)
-        else:
-            print("Selected Algo Not Recognised")
+        elif trading_params[Constants.ALGO_TYPE] == "TWAP_MARKET_OTC":
+            HelperBybit.twap_market_otc_order(self, trading_params)
+        elif trading_params[Constants.ALGO_TYPE] == "TWAP_LIMIT":
+            HelperBybit.twap_limit_order(self, trading_params)

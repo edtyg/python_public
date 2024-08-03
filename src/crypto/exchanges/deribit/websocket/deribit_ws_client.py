@@ -10,7 +10,7 @@ import websockets
 from keys.api_personal.crypto_exchanges.deribit import DERIBIT_READ
 
 
-class deribitWebSocket:
+class deribitWS:
     """
     Websocket client for deribit exchange
     private and public connections
@@ -134,14 +134,6 @@ class deribitWebSocket:
 
 if __name__ == "__main__":
     account = DERIBIT_READ
-    client = deribitWebSocket(account["api_key"], account["api_secret"])
+    client = deribitWS(account["api_key"], account["api_secret"])
 
-    # asyncio.get_event_loop().run_until_complete(
-    #     client.get_trades_by_instrument("ETH-PERPETUAL", 1)
-    # )
-
-    # asyncio.get_event_loop().run_until_complete(
-    #     client.get_orderbook("ETH-PERPETUAL", 1)
-    # )
-
-    asyncio.get_event_loop().run_until_complete(client.get_positions("ETH", "future"))
+    asyncio.run(client.get_trades_by_instrument("BTC-PERPETUAL", 10))

@@ -2,30 +2,41 @@
 OKX Constants
 """
 
-from strenum import LowercaseStrEnum
+from strenum import StrEnum
 
 
-class BybitConstants(LowercaseStrEnum):
+class BybitConstants(StrEnum):
     """
     this class serves to keep a list of constants from OKX API Responses
     """
 
-    CATEGORY = "category"
-    SYMBOL = "symbol"
-    RESULT = "result"
-    LIST = "list"
-    BASE_PRECISION = "basePrecision"
-    LOT_SIZE_FILTER = "lotSizeFilter"
-    # RESULT = "result"
-    LAST_PRICE = "lastPrice"
-    QUANTITY = "qty"
-    MARKET_UNIT = "marketUnit"
-    DATA = "data"
-    ORDER_ID = "ordId"
-    UPDATED_TIME = "updatedTime"
-    SIDE = "side"
-    CUMULATIVE_BASE = "cumExecQty"
+    ACCOUNT_TYPE = "accountType"
     AVERAGE_PRICE = "avgPrice"
-
-
-# print(BybitConstants.RESULT)
+    BALANCE = "balance"
+    BASE_PRECISION = "basePrecision"
+    CATEGORY = "category"
+    COIN = "coin"
+    CUMULATIVE_BASE = "cumExecQty"
+    CUMULATIVE_QUOTE = "cumExecValue"
+    DATA = "data"
+    INVERSE = "inverse"
+    LAST_PRICE = "lastPrice"
+    LINEAR = "linear"
+    LIST = "list"
+    LOT_SIZE_FILTER = "lotSizeFilter"
+    MARKET_UNIT = "marketUnit"
+    MIN_ORDER_AMT = "minOrderAmt"
+    MIN_ORDER_QTY = "minOrderQty"
+    OPTION = "option"
+    ORDER_ID = "ordId"
+    PRICE_FILTER = "priceFilter"
+    QUANTITY = "qty"
+    QUOTE_PRECISION = "quotePrecision"
+    RESULT = "result"
+    SIDE = "side"
+    SPOT = "spot"
+    SYMBOL = "symbol"
+    TICK_SIZE = "tickSize"
+    UPDATED_TIME = "updatedTime"
+    UNIFIED = "UNIFIED"
+    WALLET_BALANCE = "walletBalance"

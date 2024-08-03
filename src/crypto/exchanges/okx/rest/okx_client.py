@@ -286,6 +286,17 @@ class Okx:
         data = self._get(api_type, endpoint, params)
         return data
 
+    def get_fixed_loan_borrow_limit(self, params: Optional[Dict] = None):
+        """
+        private method - GET
+
+        https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-fixed-loan-borrow-limit
+        """
+        api_type = "private"
+        endpoint = "/api/v5/account/fixed-loan/borrowing-limit"
+        data = self._get(api_type, endpoint, params)
+        return data
+
     ##########################
     ### order book trading ###
     ##########################

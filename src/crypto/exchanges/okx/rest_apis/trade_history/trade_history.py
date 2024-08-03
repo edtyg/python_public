@@ -8,7 +8,7 @@ from typing import Optional
 
 import pandas as pd
 
-from keys.api_work.crypto_exchanges.okx import OKX_MCA_LTP1_READ, OKX_MCA_MAIN_READ
+from keys.api_work.crypto_exchanges.okx import OKX_KEYS
 from src.crypto.exchanges.okx.rest.okx_client import Okx
 
 
@@ -104,7 +104,7 @@ def retrieve_trade_records_2y(client, year: str, quarter: str):
 
 
 if __name__ == "__main__":
-    key = OKX_MCA_LTP1_READ
+    key = OKX_KEYS["OKX_MCA_MAIN_TRADE"]
     okx_client = Okx(
         apikey=key["api_key"],
         apisecret=key["api_secret"],
@@ -119,11 +119,33 @@ if __name__ == "__main__":
     # req = request_trade_records_2y(okx_client, "2023", "Q1")
     # ret = retrieve_trade_records_2y(okx_client, "2023", "Q1")
 
-    tx_details_3d = okx_client.get_transaction_details_3d(
+    # order = okx_client.place_order(
+    #     {
+    #         "instId": "TON-USDT",
+    #         "tdMode": "cross",
+    #         "tag": "test",
+    #         "side": "buy",  # lowercase
+    #         "ordType": "ioc",
+    #         "px": 10,
+    #         "sz": 0.2,
+    #     }
+    # )
+    # print(order)
+
+    # get fills
+    # tx_details_3d = okx_client.get_transaction_details_3d(
+    #     {
+    #         "instType": "SPOT",
+    #         "ordId": 1651505358463684608,
+    #         "instId": "TON-USDT",
+    #     }
+    # )
+    # print(tx_details_3d)
+
+    order_details = okx_client.get_order_details(
         {
-            "instType": "SPOT",
-            "ordId": None,
+            "ordId": 1657284359065030656,
             "instId": "BTC-USDT",
         }
     )
-    print(tx_details_3d)
+    print(order_details)

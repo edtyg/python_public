@@ -8,7 +8,7 @@ from typing import Dict, Optional
 import requests
 
 
-class DeribitRestClient:
+class DeribitRest:
     """
     A Python wrapper for the Deribit REST API.
 

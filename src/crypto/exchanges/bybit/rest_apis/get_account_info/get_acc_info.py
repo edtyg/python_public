@@ -2,39 +2,21 @@
 Bybit Account info - check if it's UTA
 """
 
-import pandas as pd
-
-from crypto.exchanges.bybit.rest_apis.accounts import spot_client_read
-
-
-def acc_info(client):
-    """
-    Check on fees
-
-    Args:
-        client (_type_): bybit spot client
-    """
-    acc = client.get_account_info()
-    return acc
-
-
-def collateral_info(client):
-    """
-    Check on collateral settings
-
-    Args:
-        client (_type_): bybit spot client
-    """
-    acc_collateral = client.get_collateral_info()["result"]["list"]
-    print(acc_collateral)
-    df_data = pd.DataFrame(acc_collateral)
-    return df_data
-
+from crypto.exchanges.bybit.rest_apis.accounts import BYBIT_MCA_LTP1_TRADE
 
 if __name__ == "__main__":
+    account = BYBIT_MCA_LTP1_TRADE
 
-    acc = acc_info(spot_client_read)
-    print(acc)
+    # account_info = account.get_account_info()
+    # print(account_info)
 
-    coll = collateral_info(spot_client_read)
-    print(coll)
+    # account_collateral_info = account.get_collateral_info()
+    # print(account_collateral_info)
+
+    # account_positions = account.get_position_info(
+    #     {
+    #         "category": "spot",
+    #         "symbol": "BTCUSDT",
+    #     }
+    # )
+    # print(account_positions)

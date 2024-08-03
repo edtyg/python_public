@@ -1,0 +1,24 @@
+backtesting methodology - method A
+
+1) Pull BRRAP - 3pm to 4pm HKT
+2) Pull Binance and okx trade records - 3pm to 4pm HKT
+
+inputs: k partitions, weights (0.6 binance, 0.4 okx)
+
+3) Get binance/okx price
+for binance e.g.
+sort all the trade records by time
+take all trade records in the hour and partition then into k partitions (e.g 10)
+in each partition take the price of the median trade done
+i.e 1000 trades done in partition 1 - extract price of trade number 500
+
+do this for the remaining partitions and take the average price (sum the price and divide by k)
+the average px would be binance's price
+
+4) repeat for okx
+repeat the same for okx
+and get okx's price
+
+5) do a weightage and get the weighted price
+
+6) compare weighted price vs BRRAP

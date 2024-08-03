@@ -2,18 +2,15 @@
 SPOT execution program
 """
 
-from keys.api_work.crypto_exchanges.bybit import (
-    BYBIT_MCA_LTP1_READ,
-    BYBIT_MCA_LTP1_TRADE,
-)
+from keys.api_work.crypto_exchanges.bybit import BYBIT_KEYS
 from src.crypto.exchanges.bybit.rest.bybit_client import Bybit
 
-spot_client_read = Bybit(
-    apikey=BYBIT_MCA_LTP1_READ["api_key"],
-    apisecret=BYBIT_MCA_LTP1_READ["api_secret"],
+BYBIT_MCA_LTP1_READ = Bybit(
+    api_key=BYBIT_KEYS["BYBIT_MCA_MAIN_READ"]["api_key"],
+    api_secret=BYBIT_KEYS["BYBIT_MCA_MAIN_READ"]["api_secret"],
 )
 
-spot_client_trade = Bybit(
-    apikey=BYBIT_MCA_LTP1_TRADE["api_key"],
-    apisecret=BYBIT_MCA_LTP1_TRADE["api_secret"],
+BYBIT_MCA_LTP1_TRADE = Bybit(
+    api_key=BYBIT_KEYS["BYBIT_MCA_MAIN_TRADE"]["api_key"],
+    api_secret=BYBIT_KEYS["BYBIT_MCA_MAIN_TRADE"]["api_secret"],
 )

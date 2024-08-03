@@ -37,13 +37,20 @@ def set_hypertable(client, tablename: str, datetime_col_name: str):
     query = f"""
     SELECT create_hypertable('{tablename}', '{datetime_col_name}')
     """
-    print(query)
+
     engine = client.engine
-    connection = engine.connect()
-    sql_query = text(query)
-    result_proxy = connection.execute(sql_query)
-    result = result_proxy.fetchall()
-    print(result)
+    with engine.connect() as connection:
+        trans = connection.begin()
+        try:
+            sql_query = text(query)
+            result_proxy = connection.execute(sql_query)
+            trans.commit()  # setting up hypertable
+            results = result_proxy.fetchall()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+        df_results = pd.DataFrame(results)
+        return df_results
 
 
 if __name__ == "__main__":

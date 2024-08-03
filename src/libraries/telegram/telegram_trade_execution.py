@@ -211,13 +211,13 @@ if __name__ == "__main__":
     client = Telegram()
 
     # sending normal message #
-    # resp = client.send_message(
-    #     6,
-    #     f"{client.fire_emoji*3} hi testing {client.fire_emoji*3}",
-    # )
-
-    # sending message with @users
-    resp = client.send_message_error(
-        10,
+    resp = client.send_message(
+        6,
         f"{client.fire_emoji*3} hi testing {client.fire_emoji*3}",
     )
+
+    # # sending message with @users
+    # resp = client.send_message_error(
+    #     10,
+    #     f"{client.fire_emoji*3} hi testing {client.fire_emoji*3}",
+    # )

@@ -2,29 +2,36 @@
 OKX Constants
 """
 
-from strenum import LowercaseStrEnum
+from strenum import StrEnum
 
 
-class OkxConstants(LowercaseStrEnum):
+class OkxConstants(StrEnum):
     """
     this class serves to keep a list of constants from OKX API Responses
     """
 
-    MIN_SIZE = "minSz"
+    AVERAGE_PRICE = "avgPx"
+    CASH_BALANCE = "cashBal"
+    CURRENCY = "ccy"
     DATA = "data"
-    INSTRUMENT_TYPE = "instType"
+    DETAILS = "details"
+    FILL_SIZE = "fillSz"
+    FILL_TIME = "fillTime"
+    FUTURES = "futures"
     INSTRUMENT_ID = "instId"
+    INSTRUMENT_TYPE = "instType"
+    LAST = "last"
+    LOT_SIZE = "lotSz"
+    MARGIN = "margin"
+    MIN_SIZE = "minSz"
+    OPTION = "option"
+    SIDE = "side"
+    SIZE = "sz"
     SPOT = "spot"
     SYMBOL = "symbol"
-    DETAILS = "details"
-    CURRENCY = "ccy"
-    CASH_BALANCE = "cashBal"
+    SWAP = "swap"
     TARGET_CCY = "tgtCcy"
-    SIZE = "sz"
-    FILL_TIME = "fillTime"
-    SIDE = "side"
-    FILL_SIZE = "fillSz"
-    AVERAGE_PRICE = "avgPx"
+    TICK_SIZE = "tickSz"
 
 
 # print(BinanceConstants.STATUS)

@@ -4,12 +4,8 @@ Gets Coinbase Exchange account transfers
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_exchanges.coinbase import (
-    COINBASE_EXCHANGE_HTS_READ,
-)
-from python.crypto.exchanges.coinbase.rest.coinbase_exchange_client import (
-    CoinbaseExchange,
-)
+from keys.api_work.crypto_exchanges.coinbase import COINBASE_EXCHANGE_HTS_READ
+from src.crypto.exchanges.coinbase.rest.coinbase_exchange_client import CoinbaseExchange
 
 
 def get_all_account_transfers(client):

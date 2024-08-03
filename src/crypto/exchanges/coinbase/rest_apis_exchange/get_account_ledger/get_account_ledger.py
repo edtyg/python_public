@@ -6,12 +6,8 @@ import datetime as dt
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_exchanges.coinbase import (
-    COINBASE_EXCHANGE_HTS_READ,
-)
-from python.crypto.exchanges.coinbase.rest.coinbase_exchange_client import (
-    CoinbaseExchange,
-)
+from keys.api_work.crypto_exchanges.coinbase import COINBASE_EXCHANGE_HTS_READ
+from src.crypto.exchanges.coinbase.rest.coinbase_exchange_client import CoinbaseExchange
 
 
 def get_ccy_ledger(client):
@@ -26,8 +22,8 @@ def get_ccy_ledger(client):
     """
     records = client.get_single_account_ledger("d04b51ca-4e71-40f6-8363-6a59afba968e")
     df_records = pd.DataFrame(records)
-    df_conversions = df_records.loc[df_records["type"] == "conversion"]
-    return df_conversions
+    # df_conversions = df_records.loc[df_records["type"] == "conversion"]
+    return df_records
 
 
 if __name__ == "__main__":

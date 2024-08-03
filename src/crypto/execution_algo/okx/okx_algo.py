@@ -95,14 +95,14 @@ class OkxAlgoTrading(HelperOkx):
             + "-"
             + trading_params[Constants.QUOTE_CURRENCY]
         ):
-            print("Please check on ticker, does not match base and quote ccy")
+            print(
+                "Please check on ticker, does not match base and quote ccy remember to use '-' i.e BTC-USDT"
+            )
             return
 
         # 2 - Check if Ticker exists in OKX
         try:
-            ticker_decimal_places = HelperOkx.get_spot_ticker_info(
-                self, trading_params[Constants.TICKER]
-            )
+            ticker_info = self.get_ticker_info("SPOT", trading_params[Constants.TICKER])
         except KeyError:
             print("Ticker does not exist in OKX - please check again")
             return
@@ -151,5 +151,7 @@ class OkxAlgoTrading(HelperOkx):
         ### Strategy Specific Checks ###
         if trading_params[Constants.ALGO_TYPE] == "TWAP_MARKET":
             HelperOkx.twap_market_order(self, trading_params)
-        else:
-            print("Selected Algo Not Recognised")
+        elif trading_params[Constants.ALGO_TYPE] == "TWAP_MARKET_OTC":
+            HelperOkx.twap_market_otc_order(self, trading_params)
+        elif trading_params[Constants.ALGO_TYPE] == "TWAP_LIMIT":
+            HelperOkx.twap_limit_order(self, trading_params)

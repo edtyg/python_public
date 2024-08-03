@@ -58,6 +58,24 @@ class BinanceUsdm(Binance):
             "PUBLIC", "GET", self.binance_usdm_base_url, endpoint, params
         )
 
+    def get_usdm_funding_rate_history(self, params: dict) -> dict:
+        """
+        PUBLIC GET request
+        https://binance-docs.github.io/apidocs/futures/en/#get-funding-rate-history
+
+        Args:
+            params (dict):
+            Name        Type    Mandatory   Description
+            symbol 	    STRING 	YES
+            startTime 	LONG 	NO
+            endTime 	LONG 	NO
+            limit 	    INT 	NO 	        Default 500; max 1000.
+        """
+        endpoint = "/fapi/v1/fundingRate"
+        return self.rest_requests(
+            "PUBLIC", "GET", self.binance_usdm_base_url, endpoint, params
+        )
+
     def get_usdm_price_ticker_v2(self, params: Optional[Dict] = None) -> dict:
         """
         PUBLIC GET request

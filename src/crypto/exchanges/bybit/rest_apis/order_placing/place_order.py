@@ -6,8 +6,8 @@ import datetime as dt
 
 import pandas as pd
 
-from local_credentials.api_work.crypto_exchanges.bybit import BYBIT_MCA_MAIN_TRADE
-from python.crypto.exchanges.bybit.rest.bybit_client import Bybit
+from keys.api_work.crypto_exchanges.bybit import BYBIT_KEYS
+from src.crypto.exchanges.bybit.rest.bybit_client import Bybit
 
 
 def place_order(client):
@@ -24,12 +24,13 @@ def place_order(client):
     order = client.place_order(
         {
             "category": "spot",
-            "symbol": "ETHUSDT",
-            "side": "buy",
-            "orderType": "Market",
-            "qty": "4.51613",
-            "marketUnit": "quoteCoin",  # only for market orders
-            "orderLinkId": "test_1709262829",
+            "symbol": "BTCUSDT",
+            "isLeverage": "1",
+            "side": "sell",
+            "orderType": "Limit",
+            "qty": "0.0004",
+            "price": "70001.1",
+            "timeInForce": "IOC",
         }
     )
     return order
@@ -44,10 +45,13 @@ def amend_order(client):
     amend_spot_order = client.amend_order(
         {
             "category": "spot",
-            "symbol": "ETHUSDT",
-            "orderId": "1629702872117808128",
-            "qty": "0.04",
-            "price": "3000",
+            "symbol": "BTCUSDT",
+            "isLeverage": "1",
+            "side": "sell",
+            "orderType": "Limit",
+            "timeInForce": "IOC",
+            "price": "70001.26",
+            "qty": 0.0005,
         }
     )
     return amend_spot_order
@@ -68,7 +72,7 @@ def cancel_order(client):
 
 
 if __name__ == "__main__":
-    account = BYBIT_MCA_MAIN_TRADE
+    account = BYBIT_KEYS["BYBIT_MCA_LTP1_TRADE"]
     client = Bybit(
         account["api_key"],
         account["api_secret"],
@@ -76,6 +80,19 @@ if __name__ == "__main__":
 
     order1 = place_order(client)
     print(order1)
+    order_id = order1["result"]["orderId"]
+
+    import time
+
+    time.sleep(1)
+    order_history = client.get_order_history(
+        {
+            "category": "spot",
+            "symbol": "BTCUSDT",
+            "orderId": order_id,
+        }
+    )
+    print(order_history)
 
     # amend_order1 = amend_order(client)
     # print(amend_order1)

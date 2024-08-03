@@ -6,13 +6,8 @@ import datetime as dt
 
 import pandas as pd
 
-# from local_credentials.api_personal.crypto_exchanges.coinbase import (
-#     COINBASE_BROKERAGE_READ,
-# )
-from local_credentials.api_work.crypto_exchanges.coinbase import (
-    COINBASE_BROKERAGE_HTS_READ,
-)
-from python.crypto.exchanges.coinbase.rest.coinbase_brokerage_client import (
+from keys.api_work.crypto_exchanges.coinbase import COINBASE_BROKERAGE_HTS_READ
+from src.crypto.exchanges.coinbase.rest.coinbase_brokerage_client import (
     CoinbaseBrokerage,
 )
 

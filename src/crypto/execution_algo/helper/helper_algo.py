@@ -3,6 +3,7 @@ Helper Functions used in Trading Algos
 """
 
 import ast
+import math
 import random
 from typing import Optional
 
@@ -13,6 +14,14 @@ class HelperAlgo:
     """
     Helper class for trading algos
     """
+
+    @staticmethod
+    def floor_amount(value: float, decimal_places: int):
+        """
+        returns value rounded down to specified number of decimal places
+        """
+        factor = 1 * 10**decimal_places
+        return math.floor(value * factor) / factor
 
     @staticmethod
     def randomize(
@@ -115,12 +124,11 @@ class HelperAlgo:
 
         clip_sizes = []
         clip_proportion_length = clip_count // len(proportions)
+        print(clip_proportion_length)
         for p in proportioned_values:
             clip_sizes += int(clip_proportion_length) * [
                 round(p / clip_proportion_length, rounding)
             ]
-
-        print(clip_sizes)
         return clip_sizes
 
     @staticmethod
@@ -158,6 +166,7 @@ class HelperAlgo:
             Constants.CLIP_LIMIT,
             Constants.QUANTITY,
             Constants.LEVERAGE_RATIO,
+            Constants.PRICE,
             Constants.PERCENTAGE_OF_VOLUME,
             Constants.PERCENTAGE_OF_VOLUME_LOOKBACK,
             Constants.POST_ONLY_CLIP_SIZE,

@@ -557,3 +557,195 @@ class HelperBinance(
             \n{TelegramMessenger.fire_emoji*3}\
             """,
         )
+
+    def twap_limit_order(self, order_params: dict):
+        """
+        Helper to place Cross Margin TWAP Limit IOC orders
+        Does some checks specific to this order before starting algo
+        Places IOC Limit orders at specified prices
+        """
+        trading_params = HelperAlgo.params_parser(order_params)
+
+        # 1 - Check on number of clips
+        print(f"number of clips = {trading_params[Constants.CLIP_COUNT]}")
+        print(
+            f"clip intervals = {trading_params[Constants.TWAP_CLIP_INTERVAL]} seconds"
+        )
+
+        if (
+            int(trading_params[Constants.CLIP_COUNT])
+            != trading_params[Constants.CLIP_COUNT]
+        ):
+            print("Please choose a different TWAP time and interval")
+            return
+
+        # 2 - Check if Clip type is Base or Quote CCY - Limit orders only allow base ccy
+        if trading_params[Constants.CLIP_TYPE].upper() == "QUOTE":
+            print("Adjust Clip Type, Limit Orders does not allow Quote CCY")
+            return
+
+        if trading_params[Constants.TRADE_STATUS].upper() not in ["CHECK", "TRADE"]:
+            print("check on trade status -> has to be either check or trade")
+            return
+        elif trading_params[Constants.TRADE_STATUS].upper() == "CHECK":
+            print("all checks passed")
+            print("select trade mode to begin algo")
+            return
+
+        # proceeding to trading algo here
+        print("trade mode selected -> proceeding with trading algo")
+
+        order_payload = {
+            "symbol": trading_params[Constants.TICKER],
+            "isIsolated": "FALSE",
+            "side": trading_params[Constants.DIRECTION],
+            "type": "LIMIT",
+            "newClientOrderId": trading_params[Constants.ORDER_ID],
+            "sideEffectType": "MARGIN_BUY",
+            "timeInForce": "IOC",
+            "price": trading_params[Constants.PRICE],
+        }
+
+        # Sending Mesage On Start
+        TelegramMessenger.send_message(
+            trading_params[Constants.TELEGRAM_GROUP],
+            f"""
+            {TelegramMessenger.fire_emoji*3}\
+            \nStarting {trading_params[Constants.EXCHANGE]} {trading_params[Constants.ALGO_TYPE]} {trading_params[Constants.DIRECTION]} order for {trading_params[Constants.TICKER]}\
+            \ntotal size = {trading_params[Constants.QUANTITY]} {trading_params[Constants.CLIP_CCY]} \
+            \n{TelegramMessenger.fire_emoji*3}\
+            """,
+        )
+
+        # set remaining qty
+        i = 0
+        remaining_qty = trading_params[Constants.QUANTITY]
+        remaining_time = trading_params[Constants.TWAP_DURATION]
+        cumulative_filled_qty_base = 0
+        cumulative_filled_qty_quote = 0
+        clip_runtime = 0  # measures time taken for each iteration
+        order_status = True
+        while order_status is True:
+            try:
+                start_time = time.time()  # start time
+
+                # calculates number of remaining clips -> Remaining time / clip interval
+                number_of_clips = max(
+                    int(remaining_time // trading_params[Constants.TWAP_CLIP_INTERVAL]),
+                    1,
+                )
+                clip_size = round(
+                    remaining_qty / number_of_clips,
+                    self.get_spot_ticker_info(trading_params[Constants.TICKER]),
+                )
+                # set clip size here
+                order_payload["quantity"] = clip_size
+                print(order_payload)
+
+                # placing order here
+                order = BinanceCrossMargin.post_margin_new_order(self, order_payload)
+                print("order placed")
+                print(order)
+
+                # if order not filled -> go next iteration
+                if order[BinanceConstants.STATUS] != "FILLED":
+                    time.sleep(1)
+                    end_time = time.time()
+                    remaining_time -= end_time - start_time
+                    print(f"remaining time = {remaining_time}")
+
+                    # exits loop at last clip
+                    if number_of_clips == 1:
+                        # exits loop
+                        order_status = False
+                    continue
+
+                self.logger.info(order)
+                clip_symbol = order[BinanceConstants.SYMBOL]
+                clip_orderid = order[BinanceConstants.ORDER_ID]
+                clip_transact_time = order[BinanceConstants.TRANSACT_TIME]
+                clip_direction = order[BinanceConstants.SIDE]
+                clip_fill_details = order[BinanceConstants.FILLS]
+                clip_fill_qty_quote = float(
+                    order[BinanceConstants.CUMULATIVE_QUOTE_QTY]
+                )
+                cumulative_filled_qty_quote += clip_fill_qty_quote
+
+                clip_fill_qty_base = 0
+                for f in clip_fill_details:
+                    clip_fill_qty_base += float(f[BinanceConstants.QUANTITY])
+                cumulative_filled_qty_base += clip_fill_qty_base
+
+                if order_params[Constants.CLIP_TYPE].upper() == "BASE":
+                    remaining_qty -= clip_fill_qty_base
+                elif order_params[Constants.CLIP_TYPE].upper() == "QUOTE":
+                    remaining_qty -= clip_fill_qty_quote
+                average_filled_price = round(
+                    clip_fill_qty_quote / clip_fill_qty_base, 6
+                )
+
+                # sending tg message
+                TelegramMessenger.send_message(
+                    trading_params[Constants.TELEGRAM_GROUP],
+                    f"""
+                    clip {i+1}:\
+                    \nplatform = {order_params[Constants.EXCHANGE]}\
+                    \nsymbol = {clip_symbol}\
+                    \norderId = {clip_orderid}\
+                    \ntime = {clip_transact_time}\
+                    \nside = {clip_direction}\
+                    \navg_px = {average_filled_price}\
+                    \nqty_filled_base = {clip_fill_qty_base}\
+                    \nqty_filled_quote = {clip_fill_qty_quote}\
+                    \ncumulative_qty_base = {cumulative_filled_qty_base}\
+                    \ncumulative_qty_quote = {cumulative_filled_qty_quote}\
+                    """,
+                )
+                print(f"clip {i+1} done")
+                end_time = time.time()  # end time
+                clip_runtime = end_time - start_time  # time taken to run this clip
+
+                # offset the twap duration by clip run time
+                # i.e preset 10sec per clip, runtime 5 seconds -> sleep 5 seconds
+                time_sleep_offset = max(
+                    0, trading_params[Constants.TWAP_CLIP_INTERVAL] - clip_runtime
+                )
+                remaining_time -= clip_runtime + time_sleep_offset
+
+                # exits loop at last clip
+                if number_of_clips == 1:
+                    # exits loop
+                    order_status = False
+
+                print(f"Remaining Time = {remaining_time}")
+                print(f"Remaining Quantity = {remaining_qty}")
+
+                i += 1  # move to next clip
+                print(f"sleeping for {time_sleep_offset} seconds")
+                time.sleep(time_sleep_offset)
+
+            except Exception as error:
+                print(f"placing order error: {error}")
+                self.logger.exception(error)
+
+                # sending tg message
+                TelegramMessenger.send_message_error(
+                    trading_params[Constants.TELEGRAM_GROUP],
+                    f"{TelegramMessenger.alarm_emoji} clip {i+1} error, retrying again {TelegramMessenger.alarm_emoji}",
+                )
+                self.logger.warning("telegram exception: continuing with execution")
+
+                sleep_time = 0.2
+                remaining_time -= sleep_time
+                time.sleep(sleep_time)
+                print(f"Error slept for {sleep_time} seconds")
+
+        # send message on completion
+        TelegramMessenger.send_message(
+            trading_params[Constants.TELEGRAM_GROUP],
+            f"""
+            {TelegramMessenger.fire_emoji*3}\
+            \norder completed please check\
+            \n{TelegramMessenger.fire_emoji*3}\
+            """,
+        )

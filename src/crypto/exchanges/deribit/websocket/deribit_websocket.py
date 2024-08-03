@@ -3,7 +3,6 @@ import json
 import time
 
 import websockets
-
 from local_credentials.api_key_exchanges import DERIBIT_KEY, DERIBIT_SECRET
 
 

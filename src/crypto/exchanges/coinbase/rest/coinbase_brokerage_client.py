@@ -1,5 +1,5 @@
 """
-https://docs.cdp.coinbase.com/advanced-trade/docs/welcome/
+https://docs.cdp.coinbase.com/advanced-trade/docs/api-overview
 pip install coinbase-advanced-py
 """
 
